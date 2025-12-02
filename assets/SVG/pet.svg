@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Logo_2" data-name="Logo 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 86.47 82.914">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#linear-gradient-5);
+      }
+
+      .cls-2 {
+        fill: url(#linear-gradient-4);
+      }
+
+      .cls-3 {
+        fill: url(#linear-gradient-3);
+      }
+
+      .cls-4 {
+        fill: url(#linear-gradient-2);
+      }
+
+      .cls-5 {
+        fill: url(#linear-gradient);
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="12.311" y1="55.305" x2="69.081" y2="55.305" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3d879d"/>
+      <stop offset=".999" stop-color="#2c3e50"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="47.332" y1="23.551" x2="69.388" y2="23.551" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-3" x1="23.252" y1="19.091" x2="44.865" y2="19.091" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-4" x1="64.287" y1="42.178" x2="83.336" y2="42.178" xlink:href="#linear-gradient"/>
+    <linearGradient id="linear-gradient-5" x1="3.134" y1="31.88" x2="21.364" y2="31.88" xlink:href="#linear-gradient"/>
+  </defs>
+  <path class="cls-5" d="M38.762,34.138c7.234-.593,13.879,2.467,18.116,8.279,3.191,5.52,7.405,10.815,10.512,16.339,4.373,7.776-.109,17.267-9.162,17.771-3.207.179-5.54-1.288-8.451-2.186-5.433-1.675-11.307-1.825-16.817-.411-5.241,1.344-7.986,4.07-13.802,1.646-6.915-2.882-8.617-10.788-4.994-17.022,3.466-5.966,7.723-11.844,11.513-17.617,3.184-3.658,8.202-6.399,13.085-6.799Z"/>
+  <path class="cls-4" d="M66.101,13.754c7.924,7.924.422,24.562-10.828,22.163-7.6-1.62-9.523-10.81-6.715-17.186,2.954-6.708,11.687-10.832,17.543-4.976Z"/>
+  <path class="cls-3" d="M33.316,6.401c8.651-.674,13.009,9.161,11.109,16.555-2.747,10.691-15.812,12.212-20.137,1.77-2.948-7.118.5-17.66,9.028-18.324Z"/>
+  <path class="cls-2" d="M74.479,32.238c7.229-.65,10.531,6.557,8.028,12.713-2.459,6.049-11.047,10.123-16.046,4.601-5.515-6.091.31-16.621,8.019-17.315Z"/>
+  <path class="cls-1" d="M10.644,21.6c8.565-.606,13.935,11.317,8.576,17.695-4.915,5.85-13.066,1.992-15.36-4.274-2.019-5.514.149-12.951,6.784-13.421Z"/>
+</svg>

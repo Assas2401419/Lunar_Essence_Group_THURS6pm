@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Logo_2" data-name="Logo 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 86.47 82.914">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#linear-gradient);
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="10.704" y1="41.457" x2="81.821" y2="41.457" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#3d879d"/>
+      <stop offset=".999" stop-color="#2c3e50"/>
+    </linearGradient>
+  </defs>
+  <path class="cls-1" d="M32.097,5.899c1.209-.197,2.511.811,2.508,2.05-.002.821-1,2.531-1.33,3.393-9.608,25.119,12.23,50.614,38.493,44.554,2.615-.603,4.526-1.638,6.937-2.49.795-.281,1.119-.443,1.942-.038,2.249,1.108.727,3.388-.129,4.881-10.998,19.181-36.462,24.779-54.443,11.643-20.69-15.114-20.47-46.115.516-60.856,1.002-.704,4.475-2.968,5.505-3.136Z"/>
+</svg>
