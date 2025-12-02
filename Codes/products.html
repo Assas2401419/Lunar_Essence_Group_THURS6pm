@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Luxury Candles - Lunar Essence | Moon Phase Collections</title>
+    <meta name="description" content="Browse our complete collection of hand-poured luxury candles. Filter by moon phase collections, scent family, size, and price. Natural soy wax, wooden wicks, made in Jamaica.">
+    <link rel="stylesheet" href="../CSS/common.css">
+    <link rel="stylesheet" href="../CSS/navigation.css">
+    <link rel="stylesheet" href="../CSS/footer.css">
+    <link rel="stylesheet" href="../CSS/products.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="home.html">
+                    <img src="../assets/Logo 2.svg" alt="Lunar Essence Logo" class="logo-image">
+                </a>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="products.html" class="nav-link active">Shop</a>
+                    <div class="dropdown-content">
+                        <a href="products.html?collection=new-moon">New Moon</a>
+                        <a href="products.html?collection=crescent">Crescent Moon</a>
+                        <a href="products.html?collection=half-moon">Half Moon</a>
+                        <a href="products.html?collection=gibbous">Gibbous Moon</a>
+                        <a href="products.html?collection=full-moon">Full Moon</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="care-tips.html" class="nav-link">Care Tips</a>
+                </li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="auth.html" class="nav-icon" id="auth-link">
+                    <img src="../assets/register.svg" alt="Account" class="nav-icon-img">
+                </a>
+                <a href="cart.html" class="nav-icon">
+                    <img src="../assets/shop.svg" alt="Shopping Cart" class="nav-icon-img">
+                    <span class="cart-count" id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="home.html">Home</a>
+                    <span class="separator">></span>
+                    <span class="current">Shop</span>
+                </div>
+                <h1>Our Collections</h1>
+                <p>Discover premium hand-poured candles inspired by the mystical phases of the moon</p>
+            </div>
+        </section>
+
+        <!-- Products Section -->
+        <section class="products-section">
+            <div class="container">
+                <div class="products-layout">
+                    <!-- Sidebar Filters -->
+                    <aside class="filters-sidebar">
+                        <div class="filters-header">
+                            <h3>Filter Products</h3>
+                            <button class="clear-filters" id="clear-filters">Clear All</button>
+                        </div>
+
+                        <!-- Collection Filter -->
+                        <div class="filter-group">
+                            <h4>Collection</h4>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" name="collection" value="new-moon">
+                                    <span class="checkmark"></span>
+                                    New Moon
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="collection" value="crescent">
+                                    <span class="checkmark"></span>
+                                    Crescent Moon
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="collection" value="half-moon">
+                                    <span class="checkmark"></span>
+                                    Half Moon
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="collection" value="gibbous">
+                                    <span class="checkmark"></span>
+                                    Gibbous Moon
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="collection" value="full-moon">
+                                    <span class="checkmark"></span>
+                                    Full Moon
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Product Type Filter -->
+                        <div class="filter-group">
+                            <h4>Product Type</h4>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="radio" name="product-type" value="all" checked>
+                                    <span class="checkmark"></span>
+                                    All Products
+                                </label>
+                                <label class="filter-option">
+                                    <input type="radio" name="product-type" value="candles">
+                                    <span class="checkmark"></span>
+                                    Candles
+                                </label>
+                                <label class="filter-option">
+                                    <input type="radio" name="product-type" value="wax-melts">
+                                    <span class="checkmark"></span>
+                                    Wax Melts
+                                </label>
+                                <label class="filter-option">
+                                    <input type="radio" name="product-type" value="gift-sets">
+                                    <span class="checkmark"></span>
+                                    Gift Sets
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Size Filter -->
+                        <div class="filter-group">
+                            <h4>Size</h4>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" name="size" value="votive">
+                                    <span class="checkmark"></span>
+                                    Votive (3oz)
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="size" value="medium">
+                                    <span class="checkmark"></span>
+                                    Medium Jar (10oz)
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="size" value="large">
+                                    <span class="checkmark"></span>
+                                    Large Statement (20oz)
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Price Range Filter -->
+                        <div class="filter-group">
+                            <h4>Price Range</h4>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" name="price" value="0-25">
+                                    <span class="checkmark"></span>
+                                    $0 - $25
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="price" value="26-50">
+                                    <span class="checkmark"></span>
+                                    $26 - $50
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="price" value="51-75">
+                                    <span class="checkmark"></span>
+                                    $51 - $75
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="price" value="76+">
+                                    <span class="checkmark"></span>
+                                    $76+
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Scent Family Filter -->
+                        <div class="filter-group">
+                            <h4>Scent Family</h4>
+                            <div class="filter-options">
+                                <label class="filter-option">
+                                    <input type="checkbox" name="scent" value="floral">
+                                    <span class="checkmark"></span>
+                                    Floral
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="scent" value="woody">
+                                    <span class="checkmark"></span>
+                                    Woody
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="scent" value="fresh">
+                                    <span class="checkmark"></span>
+                                    Fresh
+                                </label>
+                                <label class="filter-option">
+                                    <input type="checkbox" name="scent" value="seasonal">
+                                    <span class="checkmark"></span>
+                                    Seasonal
+                                </label>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- Main Products Area -->
+                    <div class="products-main">
+                        <!-- Products Header -->
+                        <div class="products-header">
+                            <div class="results-info">
+                                <span id="results-count">Showing 24 products</span>
+                            </div>
+                            <div class="products-controls">
+                                <select id="sort-select" class="sort-dropdown">
+                                    <option value="featured">Featured</option>
+                                    <option value="price-low">Price: Low to High</option>
+                                    <option value="price-high">Price: High to Low</option>
+                                    <option value="newest">Newest Arrivals</option>
+                                    <option value="best-sellers">Best Sellers</option>
+                                    <option value="a-z">A-Z</option>
+                                </select>
+                                <div class="view-toggle">
+                                    <button class="view-btn active" data-view="grid">⊞</button>
+                                    <button class="view-btn" data-view="list">☰</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Products Grid -->
+                        <div class="products-grid" id="products-grid">
+                            <!-- Products will be dynamically loaded here -->
+                        </div>
+
+                        <!-- Load More / Pagination -->
+                        <div class="pagination-section">
+                            <button class="btn btn-outline" id="load-more">Load More Products</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Collections Banner -->
+        <section class="collections-banner">
+            <div class="container">
+                <div class="banner-content">
+                    <h2>Can't Decide? Try Our Gift Sets</h2>
+                    <p>Curated collections featuring 3-5 candles from different moon phases</p>
+                    <a href="products.html?product-type=gift-sets" class="btn btn-primary">Shop Gift Sets</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Lunar Essence</h4>
+                    <p>Hand-poured luxury candles inspired by lunar phases, crafted in Jamaica.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Instagram"><img src="../assets/instagram icon.svg" alt="Instagram"></a>
+                        <a href="#" aria-label="Facebook">>><img src="../assets/Facebook icon.svg" alt="Facebook"></a>
+                        <a href="#" aria-label="Twitter"><img src="../assets/x icon.svg" alt="Twitter"></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="products.html">Shop</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="care-tips.html">Care Tips</a></li>
+                        <li><a href="auth.html">Account</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Collections</h4>
+                    <ul>
+                        <li><a href="products.html?collection=new-moon">New Moon</a></li>
+                        <li><a href="products.html?collection=crescent">Crescent Moon</a></li>
+                        <li><a href="products.html?collection=half-moon">Half Moon</a></li>
+                        <li><a href="products.html?collection=gibbous">Gibbous Moon</a></li>
+                        <li><a href="products.html?collection=full-moon">Full Moon</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: <a href="mailto:assascbenjamin@utech.edu.jm.com">assascbenjamin@utech.edu.jm</a></p>
+                    <p>Hand-poured in Jamaica 🇯🇲</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Lunar Essence. All rights reserved. | Assas Benjamin (2401419) - CIT2011</
+            </div>
+        </div>
+    </footer>
+
+    <script src="../Codes/Java/main.js"></script>
+    <script src="../Codes/Java/products.js"></script>
+</body>
+</html>

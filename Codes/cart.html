@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Lunar Essence | Review Your Items</title>
+    <meta name="description" content="Review your selected luxury candles and proceed to checkout. Secure shopping cart with easy quantity adjustments and shipping calculations.">
+    <link rel="stylesheet" href="../CSS/common.css">
+    <link rel="stylesheet" href="../CSS/navigation.css">
+    <link rel="stylesheet" href="../CSS/footer.css">
+    <link rel="stylesheet" href="../CSS/cart.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="home.html">
+                    <img src="../assets/Logo 2.svg" alt="Lunar Essence Logo" class="logo-image">
+                </a>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="products.html" class="nav-link">Shop</a>
+                    <div class="dropdown-content">
+                        <a href="products.html?collection=new-moon">New Moon</a>
+                        <a href="products.html?collection=crescent">Crescent Moon</a>
+                        <a href="products.html?collection=half-moon">Half Moon</a>
+                        <a href="products.html?collection=gibbous">Gibbous Moon</a>
+                        <a href="products.html?collection=full-moon">Full Moon</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="care-tips.html" class="nav-link">Care Tips</a>
+                </li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="auth.html" class="nav-icon" id="auth-link">
+                    <img src="../assets/register.svg" alt="Account" class="nav-icon-img">
+                </a>
+                <a href="cart.html" class="nav-icon active">
+                    <img src="../assets/shop.svg" alt="Shopping Cart" class="nav-icon-img">
+                    <span class="cart-count" id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="home.html">Home</a>
+                    <span class="separator">></span>
+                    <span class="current">Shopping Cart</span>
+                </div>
+                <h1>Shopping Cart</h1>
+                <p>Review your selected items before checkout</p>
+            </div>
+        </section>
+
+        <!-- Cart Section -->
+        <section class="cart-section">
+            <div class="container">
+                <div class="cart-layout">
+                    <!-- Cart Items -->
+                    <div class="cart-main">
+                        <!-- Cart Header -->
+                        <div class="cart-header">
+                            <h2>Your Items</h2>
+                            <button class="clear-cart-btn" id="clear-cart">Clear Cart</button>
+                        </div>
+
+                        <!-- Cart Items Container -->
+                        <div class="cart-items" id="cart-items">
+                            <!-- Cart items will be dynamically loaded here -->
+                        </div>
+
+                        <!-- Empty Cart State -->
+                        <div class="empty-cart hidden" id="empty-cart">
+                            <div class="empty-cart-icon"><img src="../assets/shop.svg" alt="icon" width="100px"></div>
+                            <h3>Your cart is empty</h3>
+                            <p>Discover our beautiful collection of hand-poured luxury candles</p>
+                            <a href="products.html" class="btn btn-primary">Browse Products</a>
+                        </div>
+
+                        <!-- Cart Actions -->
+                        <div class="cart-actions" id="cart-actions">
+                            <a href="products.html" class="btn btn-outline">Continue Shopping</a>
+                            <button class="btn btn-secondary" id="update-cart">Update Cart</button>
+                        </div>
+                    </div>
+
+                    <!-- Cart Summary Sidebar -->
+                    <div class="cart-sidebar">
+                        <div class="order-summary">
+                            <h3>Order Summary</h3>
+                            
+                            <div class="summary-line">
+                                <span>Subtotal (<span id="item-count">0</span> items)</span>
+                                <span id="subtotal">$0.00</span>
+                            </div>
+
+                            <div class="shipping-section">
+                                <label for="shipping-method">Shipping Method</label>
+                                <select id="shipping-method" class="shipping-select">
+                                    <option value="standard" data-cost="10">Standard Shipping (5-7 days) - $10.00</option>
+                                    <option value="express" data-cost="25">Express Shipping (2-3 days) - $25.00</option>
+                                </select>
+                            </div>
+
+                            <div class="summary-line">
+                                <span>Shipping</span>
+                                <span id="shipping-cost">$10.00</span>
+                            </div>
+
+                            <div class="summary-line">
+                                <span>Tax (16% GCT)</span>
+                                <span id="tax-amount">$0.00</span>
+                            </div>
+
+                            <div class="discount-section">
+                                <div class="discount-input">
+                                    <input type="text" id="discount-code" placeholder="Discount code">
+                                    <button class="btn btn-small" id="apply-discount">Apply</button>
+                                </div>
+                                <div class="discount-message hidden" id="discount-message"></div>
+                            </div>
+
+                            <div class="summary-line discount-line hidden" id="discount-line">
+                                <span>Discount</span>
+                                <span id="discount-amount">-$0.00</span>
+                            </div>
+
+                            <div class="summary-line total-line">
+                                <span>Total</span>
+                                <span id="total-amount">$0.00</span>
+                            </div>
+
+                            <button class="btn btn-primary btn-full" id="checkout-btn">
+                                Proceed to Checkout
+                            </button>
+
+                            <div class="trust-badges">
+                                <div class="trust-badge">
+                                    <span class="badge-icon"><img src="../assets/SVG/secure_1.svg" alt="icon" width="25px"></span>
+                                    <span>Secure Checkout</span>
+                                </div>
+                                <div class="trust-badge">
+                                    <span class="badge-icon"><img src="../assets/SVG/storage.svg" alt="icon" width="25px"></span>
+                                    <span>Free Returns</span>
+                                </div>
+                                <div class="trust-badge">
+                                    <span class="badge-icon"><img src="../assets/SVG/land.svg" alt="icon" width="25px"></span>
+                                    <span>Made in Jamaica</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- Cart Benefits -->
+        <section class="cart-benefits">
+            <div class="container">
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <div class="benefit-icon"><img src="../assets/SVG/shipping.svg" alt="icon" width="70px"></div>
+                        <h4>Free Shipping</h4>
+                        <p>On orders over $75</p>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon"><img src="../assets/SVG/returns.svg" alt="icon" width="70px"></div>
+                        <h4>Easy Returns</h4>
+                        <p>30-day return policy</p>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon"><img src="../assets/SVG/gift.svg" alt="icon" width="70px"></div>
+                        <h4>Gift Wrapping</h4>
+                        <p>Beautiful packaging included</p>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon"><img src="../assets/SVG/payment.svg" alt="icon" width="70px"></div>
+                        <h4>Secure Payment</h4>
+                        <p>Your information is protected</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div class="modal hidden" id="clear-cart-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Clear Cart</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove all items from your cart?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancel-clear">Cancel</button>
+                <button class="btn btn-primary" id="confirm-clear">Clear Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Lunar Essence</h4>
+                    <p>Hand-poured luxury candles inspired by lunar phases, crafted in Jamaica.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Instagram"><img src="../assets/instagram icon.svg" alt="Instagram"></a>
+                        <a href="#" aria-label="Facebook">><img src="../assets/Facebook icon.svg" alt="Facebook"></a>
+                        <a href="#" aria-label="Twitter"><img src="../assets/x icon.svg" alt="Twitter"></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="products.html">Shop</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="care-tips.html">Care Tips</a></li>
+                        <li><a href="auth.html">Account</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Collections</h4>
+                    <ul>
+                        <li><a href="products.html?collection=new-moon">New Moon</a></li>
+                        <li><a href="products.html?collection=crescent">Crescent Moon</a></li>
+                        <li><a href="products.html?collection=half-moon">Half Moon</a></li>
+                        <li><a href="products.html?collection=gibbous">Gibbous Moon</a></li>
+                        <li><a href="products.html?collection=full-moon">Full Moon</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: <a href="mailto:assascbenjamin@utech.edu.jm.com">assascbenjamin@utech.edu.jm</a></p>
+                    <p>Hand-poured in Jamaica 🇯🇲</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Lunar Essence. All rights reserved. | Assas Benjamin (2401419) - CIT2011</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../Codes/Java/main.js"></script>
+    <script src="../Codes/Java/cart.js"></script>
+</body>
+</html>

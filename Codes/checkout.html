@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Lunar Essence | Complete Your Order</title>
+    <meta name="description" content="Complete your luxury candle purchase with our secure checkout process. Fast shipping, gift options, and premium packaging included.">
+    <link rel="stylesheet" href="../CSS/common.css">
+    <link rel="stylesheet" href="../CSS/navigation.css">
+    <link rel="stylesheet" href="../CSS/footer.css">
+    <link rel="stylesheet" href="../CSS/checkout.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="home.html">
+                    <img src="../assets/Logo 2.svg" alt="Lunar Essence Logo" class="logo-image">
+                </a>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="products.html" class="nav-link">Shop</a>
+                    <div class="dropdown-content">
+                        <a href="products.html?collection=new-moon">New Moon</a>
+                        <a href="products.html?collection=crescent">Crescent Moon</a>
+                        <a href="products.html?collection=half-moon">Half Moon</a>
+                        <a href="products.html?collection=gibbous">Gibbous Moon</a>
+                        <a href="products.html?collection=full-moon">Full Moon</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="care-tips.html" class="nav-link">Care Tips</a>
+                </li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="auth.html" class="nav-icon" id="auth-link">
+                    <img src="../assets/register.svg" alt="Account" class="nav-icon-img">
+                </a>
+                <a href="cart.html" class="nav-icon">
+                    <img src="../assets/shop.svg" alt="Shopping Cart" class="nav-icon-img">
+                    <span class="cart-count" id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="home.html">Home</a>
+                    <span class="separator">></span>
+                    <a href="cart.html">Cart</a>
+                    <span class="separator">></span>
+                    <span class="current">Checkout</span>
+                </div>
+                <h1>Checkout</h1>
+                <p>Complete your order securely</p>
+            </div>
+        </section>
+
+        <!-- Checkout Section -->
+        <section class="checkout-section">
+            <div class="container">
+                <!-- Progress Indicator -->
+                <div class="checkout-progress">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Shipping</div>
+                    </div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Billing</div>
+                    </div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Payment</div>
+                    </div>
+                    <div class="progress-step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Review</div>
+                    </div>
+                </div>
+
+                <div class="checkout-layout">
+                    <!-- Checkout Form -->
+                    <div class="checkout-main">
+                        <form class="checkout-form" id="checkout-form">
+                            <!-- Step 1: Shipping Information -->
+                            <div class="checkout-step active" id="step-1">
+                                <div class="step-header">
+                                    <h2>Shipping Information</h2>
+                                    <p>Where should we send your order?</p>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="shipping-firstname">First Name</label>
+                                        <input type="text" id="shipping-firstname" name="shippingFirstName" required>
+                                        <span class="error-message"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="shipping-lastname">Last Name</label>
+                                        <input type="text" id="shipping-lastname" name="shippingLastName" required>
+                                        <span class="error-message"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="shipping-email">Email Address</label>
+                                    <input type="email" id="shipping-email" name="shippingEmail" required>
+                                    <span class="error-message"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="shipping-phone">Phone Number</label>
+                                    <input type="tel" id="shipping-phone" name="shippingPhone" required>
+                                    <span class="error-message"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="shipping-address">Street Address</label>
+                                    <input type="text" id="shipping-address" name="shippingAddress" required>
+                                    <span class="error-message"></span>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="shipping-city">City</label>
+                                        <input type="text" id="shipping-city" name="shippingCity" required>
+                                        <span class="error-message"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="shipping-parish">Parish/State</label>
+                                        <select id="shipping-parish" name="shippingParish" required>
+                                            <option value="">Select Parish</option>
+                                            <option value="Kingston">Kingston</option>
+                                            <option value="St. Andrew">St. Andrew</option>
+                                            <option value="St. Catherine">St. Catherine</option>
+                                            <option value="Clarendon">Clarendon</option>
+                                            <option value="Manchester">Manchester</option>
+                                            <option value="St. Elizabeth">St. Elizabeth</option>
+                                            <option value="Westmoreland">Westmoreland</option>
+                                            <option value="Hanover">Hanover</option>
+                                            <option value="St. James">St. James</option>
+                                            <option value="Trelawny">Trelawny</option>
+                                            <option value="St. Ann">St. Ann</option>
+                                            <option value="St. Mary">St. Mary</option>
+                                            <option value="Portland">Portland</option>
+                                            <option value="St. Thomas">St. Thomas</option>
+                                        </select>
+                                        <span class="error-message"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="shipping-postal">Postal Code</label>
+                                        <input type="text" id="shipping-postal" name="shippingPostal" required>
+                                        <span class="error-message"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="shipping-country">Country</label>
+                                        <select id="shipping-country" name="shippingCountry" required>
+                                            <option value="Jamaica">Jamaica</option>
+                                            <option value="USA">United States</option>
+                                            <option value="Canada">Canada</option>
+                                            <option value="UK">United Kingdom</option>
+                                        </select>
+                                        <span class="error-message"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Billing Information -->
+                            <div class="checkout-step" id="step-2">
+                                <div class="step-header">
+                                    <h2>Billing Information</h2>
+                                    <p>Payment and billing details</p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="same-as-shipping" checked>
+                                        <span class="checkmark"></span>
+                                        Billing address same as shipping
+                                    </label>
+                                </div>
+
+                                <div class="billing-fields hidden" id="billing-fields">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="billing-firstname">First Name</label>
+                                            <input type="text" id="billing-firstname" name="billingFirstName">
+                                            <span class="error-message"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="billing-lastname">Last Name</label>
+                                            <input type="text" id="billing-lastname" name="billingLastName">
+                                            <span class="error-message"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="billing-address">Street Address</label>
+                                        <input type="text" id="billing-address" name="billingAddress">
+                                        <span class="error-message"></span>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="billing-city">City</label>
+                                            <input type="text" id="billing-city" name="billingCity">
+                                            <span class="error-message"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="billing-parish">Parish/State</label>
+                                            <select id="billing-parish" name="billingParish">
+                                                <option value="">Select Parish</option>
+                                                <option value="Kingston">Kingston</option>
+                                                <option value="St. Andrew">St. Andrew</option>
+                                                <option value="St. Catherine">St. Catherine</option>
+                                                <option value="Clarendon">Clarendon</option>
+                                                <option value="Manchester">Manchester</option>
+                                                <option value="St. Elizabeth">St. Elizabeth</option>
+                                                <option value="Westmoreland">Westmoreland</option>
+                                                <option value="Hanover">Hanover</option>
+                                                <option value="St. James">St. James</option>
+                                                <option value="Trelawny">Trelawny</option>
+                                                <option value="St. Ann">St. Ann</option>
+                                                <option value="St. Mary">St. Mary</option>
+                                                <option value="Portland">Portland</option>
+                                                <option value="St. Thomas">St. Thomas</option>
+                                            </select>
+                                            <span class="error-message"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="billing-postal">Postal Code</label>
+                                            <input type="text" id="billing-postal" name="billingPostal">
+                                            <span class="error-message"></span>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="billing-country">Country</label>
+                                            <select id="billing-country" name="billingCountry">
+                                                <option value="Jamaica">Jamaica</option>
+                                                <option value="USA">United States</option>
+                                                <option value="Canada">Canada</option>
+                                                <option value="UK">United Kingdom</option>
+                                            </select>
+                                            <span class="error-message"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 3: Payment Information -->
+                            <div class="checkout-step" id="step-3">
+                                <div class="step-header">
+                                    <h2>Payment Information</h2>
+                                    <p>Secure payment processing</p>
+                                </div>
+
+                                <div class="demo-notice">
+                                    <div class="notice-icon">ℹ️</div>
+                                    <div class="notice-text">
+                                        <strong>Demo Mode:</strong> No real payment will be processed. 
+                                        Form fields are auto-filled for demonstration purposes.
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="card-holder">Card Holder Name</label>
+                                    <input type="text" id="card-holder" name="cardHolder" value="John Doe" required>
+                                    <span class="error-message"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="card-number">Card Number</label>
+                                    <input type="text" id="card-number" name="cardNumber" value="4532 1234 5678 9010" required>
+                                    <span class="error-message"></span>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="card-expiry">Expiry Date</label>
+                                        <input type="text" id="card-expiry" name="cardExpiry" placeholder="MM/YY" value="12/26" required>
+                                        <span class="error-message"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="card-cvv">CVV</label>
+                                        <input type="text" id="card-cvv" name="cardCvv" value="123" required>
+                                        <span class="error-message"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 4: Special Options -->
+                            <div class="checkout-step" id="step-4">
+                                <div class="step-header">
+                                    <h2>Special Options</h2>
+                                    <p>Add a personal touch to your order</p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="gift-message-toggle">
+                                        <span class="checkmark"></span>
+                                        Add a gift message
+                                    </label>
+                                </div>
+
+                                <div class="gift-message-section hidden" id="gift-message-section">
+                                    <div class="form-group">
+                                        <label for="gift-message">Gift Message (max 200 characters)</label>
+                                        <textarea id="gift-message" name="giftMessage" maxlength="200" rows="4" placeholder="Write your personalized message here..."></textarea>
+                                        <div class="character-count">
+                                            <span id="char-count">0</span>/200 characters
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="delivery-instructions">Delivery Instructions (optional)</label>
+                                    <textarea id="delivery-instructions" name="deliveryInstructions" rows="3" placeholder="Any special delivery instructions..."></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Step 5: Order Review -->
+                            <div class="checkout-step" id="step-5">
+                                <div class="step-header">
+                                    <h2>Review Your Order</h2>
+                                    <p>Please review all information before placing your order</p>
+                                </div>
+
+                                <div class="order-review">
+                                    <div class="review-section">
+                                        <h4>Order Items</h4>
+                                        <div id="review-items"></div>
+                                    </div>
+
+                                    <div class="review-section">
+                                        <h4>Shipping Address</h4>
+                                        <div id="review-shipping"></div>
+                                    </div>
+
+                                    <div class="review-section">
+                                        <h4>Billing Address</h4>
+                                        <div id="review-billing"></div>
+                                    </div>
+
+                                    <div class="review-section">
+                                        <h4>Payment Method</h4>
+                                        <div id="review-payment"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="terms-agreement" required>
+                                        <span class="checkmark"></span>
+                                        I agree to the <a href="#" class="link">Terms & Conditions</a>
+                                    </label>
+                                    <span class="error-message"></span>
+                                </div>
+                            </div>
+
+                            <!-- Navigation Buttons -->
+                            <div class="checkout-navigation">
+                                <button type="button" class="btn btn-outline" id="back-btn">Back</button>
+                                <button type="button" class="btn btn-primary" id="continue-btn">Continue</button>
+                                <button type="submit" class="btn btn-primary hidden" id="place-order-btn">Place Order</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Order Summary Sidebar -->
+                    <div class="checkout-sidebar">
+                        <div class="order-summary sticky">
+                            <h3>Order Summary</h3>
+                            
+                            <div class="summary-items" id="summary-items">
+                                <!-- Order items will be loaded here -->
+                            </div>
+
+                            <div class="summary-calculations">
+                                <div class="summary-line">
+                                    <span>Subtotal</span>
+                                    <span id="summary-subtotal">$0.00</span>
+                                </div>
+                                <div class="summary-line">
+                                    <span>Shipping</span>
+                                    <span id="summary-shipping">$10.00</span>
+                                </div>
+                                <div class="summary-line">
+                                    <span>Tax (16% GCT)</span>
+                                    <span id="summary-tax">$0.00</span>
+                                </div>
+                                <div class="summary-line total-line">
+                                    <span>Total</span>
+                                    <span id="summary-total">$0.00</span>
+                                </div>
+                            </div>
+
+                            <div class="security-badges">
+                                <div class="security-badge">
+                                    <span class="badge-icon"><img src="../assets/SVG/lock.svg" alt="icon" width="20px"></span>
+                                    <span>SSL Encrypted</span>
+                                </div>
+                                <div class="security-badge">
+                                    <span class="badge-icon"><img src="../assets/SVG/secure_1.svg" alt="icon" width="20px"></span>
+                                    <span>Secure Payment</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Order Confirmation Modal -->
+    <div class="modal hidden" id="order-confirmation-modal">
+        <div class="modal-content large">
+            <div class="modal-header success">
+                <div class="success-icon">✓</div>
+                <h3>Order Confirmed!</h3>
+            </div>
+            <div class="modal-body">
+                <div class="confirmation-details">
+                    <p>Thank you for your order! Your luxury candles are being prepared with care.</p>
+                    <div class="order-number">
+                        <strong>Order Number: <span id="confirmation-order-number"></span></strong>
+                    </div>
+                    <div class="order-summary-confirmation" id="confirmation-summary">
+                        <!-- Order details will be populated here -->
+                    </div>
+                    <p>You will receive an email confirmation shortly at <span id="confirmation-email"></span></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="products.html" class="btn btn-outline">Continue Shopping</a>
+                <a href="home.html" class="btn btn-primary">Return Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Lunar Essence</h4>
+                    <p>Hand-poured luxury candles inspired by lunar phases, crafted in Jamaica.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Instagram"><img src="../assets/instagram icon.svg" alt="Instagram"></a>
+                        <a href="#" aria-label="Facebook">><img src="../assets/Facebook icon.svg" alt="Facebook"></a>
+                        <a href="#" aria-label="Twitter"><img src="../assets/x icon.svg" alt="Twitter"></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="products.html">Shop</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="care-tips.html">Care Tips</a></li>
+                        <li><a href="auth.html">Account</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Collections</h4>
+                    <ul>
+                        <li><a href="products.html?collection=new-moon">New Moon</a></li>
+                        <li><a href="products.html?collection=crescent">Crescent Moon</a></li>
+                        <li><a href="products.html?collection=half-moon">Half Moon</a></li>
+                        <li><a href="products.html?collection=gibbous">Gibbous Moon</a></li>
+                        <li><a href="products.html?collection=full-moon">Full Moon</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: <a href="mailto:assascbenjamin@utech.edu.jm.com">assascbenjamin@utech.edu.jm</a></p>
+                    <p>Hand-poured in Jamaica 🇯🇲</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Lunar Essence. All rights reserved. | Assas Benjamin (2401419) - CIT2011</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../Codes/Java/main.js"></script>
+    <script src="../Codes/Java/checkout.js"></script>
+</body>
+</html>
