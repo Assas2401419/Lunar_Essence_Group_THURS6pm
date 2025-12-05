@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Test - Admin vs Customer</title>
+    <link rel="stylesheet" href="../CSS/common.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-light-sage) 100%);
+            padding: 40px 20px;
+        }
+
+        .test-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .test-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .test-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .test-header h1 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .nav-example {
+            background: linear-gradient(135deg, rgba(168, 197, 192, 0.1) 0%, rgba(232, 220, 196, 0.1) 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid var(--color-light-sage);
+        }
+
+        .nav-example h3 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .nav-example.admin {
+            border-color: var(--color-accent);
+            background: linear-gradient(135deg, rgba(201, 169, 97, 0.1) 0%, rgba(232, 220, 196, 0.1) 100%);
+        }
+
+        .mock-nav {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 0.9rem;
+        }
+
+        .mock-nav-item {
+            color: var(--color-text);
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .mock-nav-item:hover {
+            background: var(--color-secondary);
+        }
+
+        .mock-nav-item.dashboard {
+            background: var(--color-accent);
+            color: white;
+            font-weight: 600;
+        }
+
+        .test-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .status-box {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(129, 199, 132, 0.1) 100%);
+            border-left: 5px solid #4caf50;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .status-box.error {
+            background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(239, 83, 80, 0.1) 100%);
+            border-left-color: #f44336;
+        }
+
+        .current-user {
+            text-align: center;
+            padding: 20px;
+            background: var(--color-secondary);
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .current-user strong {
+            color: var(--color-primary);
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-card">
+            <div class="test-header">
+                <h1>🔍 Navigation Test</h1>
+                <p>Compare Admin vs Customer Navigation</p>
+            </div>
+
+            <div class="current-user" id="current-status">
+                <strong>Not Logged In</strong>
+                <p>Login to see navigation changes</p>
+            </div>
+
+            <div class="comparison">
+                <div class="nav-example admin">
+                    <h3>👑 Admin Navigation</h3>
+                    <div class="mock-nav">
+                        <div class="mock-nav-item">🏠 Home</div>
+                        <div class="mock-nav-item">🛍️ Shop</div>
+                        <div class="mock-nav-item">ℹ️ About</div>
+                        <div class="mock-nav-item">💡 Care Tips</div>
+                        <div class="mock-nav-item dashboard">📊 Dashboard</div>
+                    </div>
+                    <div class="status-box" style="margin-top: 20px;">
+                        <strong>✅ Dashboard Link Visible</strong>
+                        <p>Admins can access analytics dashboard</p>
+                    </div>
+                </div>
+
+                <div class="nav-example">
+                    <h3>👤 Customer Navigation</h3>
+                    <div class="mock-nav">
+                        <div class="mock-nav-item">🏠 Home</div>
+                        <div class="mock-nav-item">🛍️ Shop</div>
+                        <div class="mock-nav-item">ℹ️ About</div>
+                        <div class="mock-nav-item">💡 Care Tips</div>
+                    </div>
+                    <div class="status-box error" style="margin-top: 20px;">
+                        <strong>❌ No Dashboard Link</strong>
+                        <p>Customers cannot see or access dashboard</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="test-buttons">
+                <button onclick="testAdminLogin()" class="btn btn-primary">Test Admin Login</button>
+                <button onclick="testCustomerLogin()" class="btn btn-secondary">Test Customer Login</button>
+                <button onclick="testLogout()" class="btn btn-outline">Test Logout</button>
+            </div>
+
+            <div id="test-result" style="margin-top: 30px;"></div>
+        </div>
+
+        <div class="test-card">
+            <h2 style="text-align: center; margin-bottom: 30px;">Quick Links</h2>
+            <div class="test-buttons">
+                <a href="auth.html" class="btn btn-primary">Go to Login</a>
+                <a href="home.html" class="btn btn-secondary">Go to Home</a>
+                <a href="dashboard.html" class="btn btn-outline">Try Dashboard</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function testAdminLogin() {
+            // Simulate admin login
+            const adminSession = {
+                id: 'admin_default',
+                firstName: 'Admin',
+                lastName: 'User',
+                email: 'admin@lunaressence.com',
+                username: 'admin',
+                isAdmin: true,
+                loginTime: new Date().toISOString(),
+                rememberMe: false
+            };
+            
+            localStorage.setItem('lunarEssence_currentUser', JSON.stringify(adminSession));
+            updateStatus();
+            
+            showResult('success', '✅ Admin Login Successful!', 'Dashboard link should now appear in navigation. Refresh any page to see it.');
+        }
+
+        function testCustomerLogin() {
+            // Simulate customer login
+            const customerSession = {
+                id: 'user_123',
+                firstName: 'John',
+                lastName: 'Doe',
+                email: 'john@example.com',
+                username: 'johndoe',
+                isAdmin: false,
+                loginTime: new Date().toISOString(),
+                rememberMe: false
+            };
+            
+            localStorage.setItem('lunarEssence_currentUser', JSON.stringify(customerSession));
+            updateStatus();
+            
+            showResult('info', '✅ Customer Login Successful!', 'Dashboard link will NOT appear. Regular navigation only.');
+        }
+
+        function testLogout() {
+            localStorage.removeItem('lunarEssence_currentUser');
+            updateStatus();
+            
+            showResult('warning', '✅ Logged Out!', 'Dashboard link removed. Navigation reset to default.');
+        }
+
+        function updateStatus() {
+            const statusDiv = document.getElementById('current-status');
+            const user = localStorage.getItem('lunarEssence_currentUser');
+            
+            if (!user) {
+                statusDiv.innerHTML = `
+                    <strong>Not Logged In</strong>
+                    <p>Login to see navigation changes</p>
+                `;
+                return;
+            }
+            
+            const userData = JSON.parse(user);
+            const isAdmin = userData.isAdmin;
+            
+            statusDiv.innerHTML = `
+                <strong>Logged in as: ${userData.firstName} ${userData.lastName}</strong>
+                <p>Role: ${isAdmin ? '👑 Admin' : '👤 Customer'}</p>
+                <p>Dashboard Access: ${isAdmin ? '✅ Yes' : '❌ No'}</p>
+            `;
+        }
+
+        function showResult(type, title, message) {
+            const resultDiv = document.getElementById('test-result');
+            const colors = {
+                success: '#4caf50',
+                info: '#2196f3',
+                warning: '#ff9800'
+            };
+            
+            resultDiv.innerHTML = `
+                <div style="background: linear-gradient(135deg, ${colors[type]}15 0%, ${colors[type]}25 100%); 
+                            border-left: 5px solid ${colors[type]}; 
+                            padding: 20px; 
+                            border-radius: 8px;">
+                    <h3 style="color: ${colors[type]}; margin-bottom: 10px;">${title}</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        // Update status on page load
+        updateStatus();
+    </script>
+</body>
+</html>

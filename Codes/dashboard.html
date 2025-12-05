@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - Lunar Essence</title>
+    <link rel="stylesheet" href="../CSS/common.css">
+    <link rel="stylesheet" href="../CSS/navigation.css">
+    <link rel="stylesheet" href="../CSS/footer.css">
+    <style>
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .frequency-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .frequency-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .frequency-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--color-primary);
+        }
+
+        .bar-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .bar-label {
+            min-width: 80px;
+            font-weight: 500;
+        }
+
+        .bar-wrapper {
+            flex: 1;
+            background: #f0f0f0;
+            border-radius: 8px;
+            height: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bar {
+            height: 100%;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            transition: width 0.5s ease;
+            min-width: 40px;
+        }
+
+        .bar-value {
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .section-divider {
+            margin: 60px 0;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .invoices-section {
+            margin-top: 40px;
+        }
+
+        .invoice-search {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .invoice-search input {
+            flex: 1;
+            min-width: 300px;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .invoices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .invoice-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .invoice-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .invoice-total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        .invoice-body p {
+            margin: 8px 0;
+            font-size: 0.95rem;
+        }
+
+        .invoice-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .search-results {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .invoice-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            position: relative;
+            background: white;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .invoice-details .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+
+        .invoice-details .detail-row.total {
+            font-size: 1.2rem;
+            border-top: 2px solid #333;
+            margin-top: 10px;
+            padding-top: 15px;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .demo-controls {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .demo-controls h4 {
+            margin-bottom: 15px;
+        }
+
+        .demo-controls button {
+            margin: 5px;
+        }
+
+        .analytics-message {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 400px;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .analytics-message-success {
+            border-left: 4px solid #4caf50;
+        }
+
+        .analytics-message-info {
+            border-left: 4px solid #2196f3;
+        }
+
+        .analytics-message-warning {
+            border-left: 4px solid #ff9800;
+        }
+
+        .analytics-message .message-text {
+            flex: 1;
+            color: var(--color-text);
+        }
+
+        .analytics-message .message-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .analytics-message .message-close:hover {
+            color: #333;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .user-info {
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-light-sage) 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .user-info h3 {
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+
+        .user-info p {
+            color: var(--color-text);
+            margin: 5px 0;
+        }
+
+        @media (max-width: 768px) {
+            .frequency-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .invoices-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .invoice-search {
+                flex-direction: column;
+            }
+
+            .invoice-search input {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="home.html">
+                    <img src="../assets/Logo 2.svg" alt="Lunar Essence Logo" class="logo-image">
+                </a>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="products.html" class="nav-link">Shop</a>
+                    <div class="dropdown-content">
+                        <a href="products.html?collection=new-moon">New Moon</a>
+                        <a href="products.html?collection=crescent">Crescent Moon</a>
+                        <a href="products.html?collection=half-moon">Half Moon</a>
+                        <a href="products.html?collection=gibbous">Gibbous Moon</a>
+                        <a href="products.html?collection=full-moon">Full Moon</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="care-tips.html" class="nav-link">Care Tips</a>
+                </li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="auth.html" class="nav-icon" id="auth-link">
+                    <img src="../assets/register.svg" alt="Account" class="nav-icon-img">
+                </a>
+                <a href="cart.html" class="nav-icon">
+                    <img src="../assets/shop.svg" alt="Shopping Cart" class="nav-icon-img">
+                    <span class="cart-count" id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="dashboard-container">
+            <!-- Demo Controls -->
+            <div class="demo-controls">
+                <h4>Analytics Controls</h4>
+                <p><strong><img src="../assets/SVG/graph.svg" width="20px"> Dashboard shows REAL data from localStorage</strong></p>
+                <p style="font-size: 0.9rem; color: #666;">Data Source: lunarEssence_users & AllInvoices</p>
+                <button onclick="refreshDashboard()" class="btn btn-primary">🔄 Refresh Dashboard</button>
+                <button onclick="clearAllData()" class="btn btn-outline" style="background: #ff867d; color: white; border-color: #ff867d;">🗑️ Clear All Invoices</button>
+                <button onclick="createDemoData()" class="btn btn-outline">➕ Add Demo Data (Testing Only)</button>
+                <button onclick="ShowUserFrequency()" class="btn btn-secondary">Show User Frequency</button>
+                <button onclick="ShowInvoices()" class="btn btn-secondary">Show All Invoices</button>
+                <button onclick="showUserInvoicesPrompt()" class="btn btn-secondary">Get User Invoices</button>
+            </div>
+
+            <!-- User Frequency Dashboard -->
+            <div id="user-frequency-dashboard"></div>
+
+            <div class="section-divider"></div>
+
+            <!-- Invoices Section -->
+            <div class="invoices-section">
+                <h2 style="text-align: center; margin-bottom: 30px;">All Invoices</h2>
+                <div id="invoices-container"></div>
+            </div>
+
+            <div class="section-divider"></div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Lunar Essence</h4>
+                    <p>Hand-poured luxury candles inspired by lunar phases, crafted in Jamaica.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Instagram"><img src="../assets/instagram icon.svg" alt="Instagram"></a>
+                        <a href="#" aria-label="Facebook"><img src="../assets/Facebook icon.svg" alt="Facebook"></a>
+                        <a href="#" aria-label="Twitter"><img src="../assets/x icon.svg" alt="Twitter"></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="products.html">Shop</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="care-tips.html">Care Tips</a></li>
+                        <li><a href="auth.html">Account</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Collections</h4>
+                    <ul>
+                        <li><a href="products.html?collection=new-moon">New Moon</a></li>
+                        <li><a href="products.html?collection=crescent">Crescent Moon</a></li>
+                        <li><a href="products.html?collection=half-moon">Half Moon</a></li>
+                        <li><a href="products.html?collection=gibbous">Gibbous Moon</a></li>
+                        <li><a href="products.html?collection=full-moon">Full Moon</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: <a href="mailto:assascbenjamin@utech.edu.jm">assascbenjamin@utech.edu.jm</a></p>
+                    <p>Hand-poured in Jamaica 🇯🇲</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Lunar Essence. All rights reserved. | Assas Benjamin (2401419) - CIT2011</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../Codes/Java/config.js"></script>
+    <script src="../Codes/Java/main.js"></script>
+    <script src="../Codes/Java/logout.js"></script>
+    <script src="../Codes/Java/analytics.js"></script>
+    <script>
+        // Helper function to prompt for username and show user invoices
+        function showUserInvoicesPrompt() {
+            const currentUser = getCurrentUser();
+            let defaultUsername = '';
+            
+            if (currentUser) {
+                defaultUsername = currentUser.username;
+            }
+            
+            const username = prompt('Enter username to view invoices:', defaultUsername);
+            
+            if (username) {
+                GetUserInvoices(username);
+            }
+        }
+
+        // Check if user is admin before showing dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentUser = getCurrentUser();
+            
+            // Check if user is logged in and is admin
+            if (!currentUser) {
+                // Not logged in - redirect to login
+                alert('Please sign in to access the dashboard');
+                window.location.href = 'auth.html?return=dashboard.html';
+                return;
+            }
+            
+            // Check if user is admin (you can set this during registration or manually)
+            if (!currentUser.isAdmin) {
+                // Not admin - show access denied
+                document.querySelector('.dashboard-container').innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <h2>Access Denied</h2>
+                        <p>You don't have permission to view this page.</p>
+                        <p>This dashboard is for administrators only.</p>
+                        <a href="home.html" class="btn btn-primary" style="margin-top: 20px;">Return Home</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            // User is admin - verify and show data status
+            console.log('✅ Admin user authenticated:', currentUser.username);
+            
+            // Verify what data is available
+            const dataStatus = verifyDataStatus();
+            
+            // Show dashboard with real data
+            displayUserFrequencyOnPage();
+            displayInvoicesOnPage();
+            
+            // Initialize user invoices container
+            const userInvoicesContainer = document.getElementById('user-invoices-container');
+            if (userInvoicesContainer) {
+                userInvoicesContainer.innerHTML = `
+                    <div class="empty-state">
+                        <p>Click "Get User Invoices" button above to view invoices for a specific user</p>
+                    </div>
+                `;
+            }
+            
+            // Show data status message
+            if (dataStatus.users === 0 && dataStatus.invoices === 0) {
+                showAnalyticsMessage('info', '📊 Dashboard is ready! No data yet. Register users or add demo data to get started.');
+            } else {
+                showAnalyticsMessage('success', `📊 Dashboard loaded with REAL data: ${dataStatus.users} users, ${dataStatus.invoices} invoices`);
+            }
+        });
+    </script>
+</body>
+</html>

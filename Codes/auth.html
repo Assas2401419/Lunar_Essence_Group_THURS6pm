@@ -152,6 +152,17 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="register-gender">Gender</label>
+                                <select id="register-gender" name="gender" required>
+                                    <option value="">Select Gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <span class="error-message" id="register-gender-error"></span>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="register-username">Username</label>
                                 <input type="text" id="register-username" name="username" required>
                                 <span class="error-message" id="register-username-error"></span>
@@ -294,7 +305,9 @@
         </div>
     </footer>
 
+    <script src="../Codes/Java/config.js"></script>
     <script src="../Codes/Java/main.js"></script>
+    <script src="../Codes/Java/logout.js"></script>
     <script src="../Codes/Java/auth.js"></script>
 </body>
 </html>

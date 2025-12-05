@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Quick Start | Lunar Essence</title>
+    <link rel="stylesheet" href="../CSS/common.css">
+    <link rel="stylesheet" href="../CSS/navigation.css">
+    <link rel="stylesheet" href="../CSS/footer.css">
+    <style>
+        /* Additional styles for start page */
+        body {
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-light-sage) 100%);
+            min-height: 100vh;
+        }
+
+        .start-container {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 20px;
+        }
+
+        .start-card {
+            background: var(--color-white);
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .start-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .start-header h1 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .start-header .subtitle {
+            color: var(--color-text);
+            opacity: 0.7;
+            font-size: 1.1rem;
+        }
+
+        .credentials {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-light-sage) 100%);
+            color: var(--color-white);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .credentials h2 {
+            font-family: var(--font-heading);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .cred-item {
+            background: rgba(255,255,255,0.15);
+            padding: 15px 25px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .cred-label {
+            opacity: 0.9;
+            font-weight: var(--font-medium);
+        }
+
+        .cred-value {
+            font-weight: bold;
+            background: rgba(255,255,255,0.25);
+            padding: 8px 20px;
+            border-radius: 6px;
+            letter-spacing: 1px;
+        }
+
+        .steps {
+            margin: 40px 0;
+        }
+
+        .step {
+            background: linear-gradient(135deg, var(--color-secondary) 0%, rgba(232, 220, 196, 0.3) 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 5px solid var(--color-accent);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--color-accent);
+            color: var(--color-white);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 1.1rem;
+        }
+
+        .step h3 {
+            display: inline;
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            font-size: 1.3rem;
+        }
+
+        .step p {
+            margin-top: 12px;
+            color: var(--color-text);
+            line-height: 1.7;
+            padding-left: 50px;
+        }
+
+        .step code {
+            background: rgba(74, 107, 107, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: var(--color-primary);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 18px 35px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: var(--font-body);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: var(--color-accent);
+            color: var(--color-white);
+            border: 2px solid var(--color-accent);
+        }
+
+        .btn-primary:hover {
+            background: #b8954d;
+            border-color: #b8954d;
+        }
+
+        .btn-secondary {
+            background: var(--color-primary);
+            color: var(--color-white);
+            border: 2px solid var(--color-primary);
+        }
+
+        .btn-secondary:hover {
+            background: #3d5a5a;
+            border-color: #3d5a5a;
+        }
+
+        .features {
+            background: linear-gradient(135deg, rgba(168, 197, 192, 0.2) 0%, rgba(232, 220, 196, 0.2) 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 40px;
+            border: 2px solid var(--color-light-sage);
+        }
+
+        .features h3 {
+            font-family: var(--font-heading);
+            color: var(--color-primary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features li {
+            padding: 10px 0;
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .features li:before {
+            content: "🌙 ";
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+
+        .note {
+            background: linear-gradient(135deg, rgba(201, 169, 97, 0.1) 0%, rgba(232, 220, 196, 0.3) 100%);
+            border-left: 5px solid var(--color-accent);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            color: var(--color-text);
+        }
+
+        .note strong {
+            color: var(--color-primary);
+            font-weight: var(--font-semibold);
+        }
+
+        @media (max-width: 768px) {
+            .start-card {
+                padding: 30px 20px;
+            }
+
+            .start-header h1 {
+                font-size: 2.2rem;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+            .step p {
+                padding-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="home.html">
+                    <img src="../assets/Logo 2.svg" alt="Lunar Essence Logo" class="logo-image">
+                </a>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item dropdown">
+                    <a href="products.html" class="nav-link">Shop</a>
+                    <div class="dropdown-content">
+                        <a href="products.html?collection=new-moon">New Moon</a>
+                        <a href="products.html?collection=crescent">Crescent Moon</a>
+                        <a href="products.html?collection=half-moon">Half Moon</a>
+                        <a href="products.html?collection=gibbous">Gibbous Moon</a>
+                        <a href="products.html?collection=full-moon">Full Moon</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="care-tips.html" class="nav-link">Care Tips</a>
+                </li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="auth.html" class="nav-icon" id="auth-link">
+                    <img src="../assets/register.svg" alt="Account" class="nav-icon-img">
+                </a>
+                <a href="cart.html" class="nav-icon">
+                    <img src="../assets/shop.svg" alt="Shopping Cart" class="nav-icon-img">
+                    <span class="cart-count" id="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="start-container">
+        <div class="start-card">
+            <div class="start-header">
+                <h1>🔐 Admin Dashboard</h1>
+                <p class="subtitle">Quick Start Guide - Analytics Dashboard Access</p>
+            </div>
+
+            <div class="credentials">
+                <h2>Default Admin Credentials</h2>
+                <div class="cred-item">
+                    <span class="cred-label">Username:</span>
+                    <span class="cred-value">admin</span>
+                </div>
+                <div class="cred-item">
+                    <span class="cred-label">Password:</span>
+                    <span class="cred-value">Admin123</span>
+                </div>
+            </div>
+
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <h3>Login as Admin</h3>
+                    <p>Click the "Go to Login" button below and use the admin credentials shown above.</p>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <h3>Access Dashboard</h3>
+                    <p>After successful login, click "View Dashboard" or navigate to <code>dashboard.html</code></p>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <h3>Create Demo Data</h3>
+                    <p>On the dashboard, click "Create Demo Data" to populate sample users and invoices for testing.</p>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <a href="auth.html" class="btn btn-primary">
+                    <span>🚀</span>
+                    <span>Go to Login</span>
+                </a>
+                <a href="dashboard.html" class="btn btn-secondary">
+                    <span>📊</span>
+                    <span>View Dashboard</span>
+                </a>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="admin-guide.html" style="color: var(--color-primary); text-decoration: underline; font-size: 0.95rem;">
+                    📖 View Complete Admin Guide
+                </a>
+            </div>
+
+            <div class="features">
+                <h3>Dashboard Features (Admin Only)</h3>
+                <ul>
+                    <li>User frequency by gender (Male, Female, Other)</li>
+                    <li>User frequency by age groups (18-25, 26-35, 36-50, 50+)</li>
+                    <li>View all customer invoices</li>
+                    <li>Search invoices by TRN, order number, or customer</li>
+                    <li>Detailed invoice information</li>
+                    <li>Console functions for testing</li>
+                </ul>
+            </div>
+
+            <div class="note">
+                <strong>⚠️ Note:</strong> The admin account is automatically created when you first load any page. 
+                Regular customers cannot access the dashboard - they will see an "Access Denied" message.
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Lunar Essence</h4>
+                    <p>Hand-poured luxury candles inspired by lunar phases, crafted in Jamaica.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Instagram"><img src="../assets/instagram icon.svg" alt="Instagram"></a>
+                        <a href="#" aria-label="Facebook"><img src="../assets/Facebook icon.svg" alt="Facebook"></a>
+                        <a href="#" aria-label="Twitter"><img src="../assets/x icon.svg" alt="Twitter"></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="products.html">Shop</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="care-tips.html">Care Tips</a></li>
+                        <li><a href="auth.html">Account</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Collections</h4>
+                    <ul>
+                        <li><a href="products.html?collection=new-moon">New Moon</a></li>
+                        <li><a href="products.html?collection=crescent">Crescent Moon</a></li>
+                        <li><a href="products.html?collection=half-moon">Half Moon</a></li>
+                        <li><a href="products.html?collection=gibbous">Gibbous Moon</a></li>
+                        <li><a href="products.html?collection=full-moon">Full Moon</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: <a href="mailto:assascbenjamin@utech.edu.jm">assascbenjamin@utech.edu.jm</a></p>
+                    <p>Hand-poured in Jamaica 🇯🇲</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Lunar Essence. All rights reserved. | Assas Benjamin (2401419) - CIT2011</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../Codes/Java/main.js"></script>
+
+    <script>
+        // Auto-create admin on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                const users = localStorage.getItem('lunarEssence_users');
+                let usersList = users ? JSON.parse(users) : [];
+                
+                const adminExists = usersList.some(u => u.username === 'admin' && u.isAdmin === true);
+                
+                if (!adminExists) {
+                    const defaultAdmin = {
+                        id: 'admin_default',
+                        firstName: 'Admin',
+                        lastName: 'User',
+                        email: 'admin@lunaressence.com',
+                        username: 'admin',
+                        password: 'Admin123',
+                        dateOfBirth: '1990-01-01',
+                        gender: 'Other',
+                        isAdmin: true,
+                        registrationDate: new Date().toISOString(),
+                        addresses: []
+                    };
+                    
+                    usersList.push(defaultAdmin);
+                    localStorage.setItem('lunarEssence_users', JSON.stringify(usersList));
+                    
+                    console.log('✅ Admin account created successfully!');
+                }
+            } catch (error) {
+                console.error('Error creating admin:', error);
+            }
+        });
+    </script>
+</body>
+</html>

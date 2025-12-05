@@ -513,9 +513,121 @@ class CheckoutController {
     }
 
     saveOrder(order) {
+        // Save to lunarEssence_orders (for customer order history)
         const orders = JSON.parse(localStorage.getItem('lunarEssence_orders') || '[]');
         orders.push(order);
         localStorage.setItem('lunarEssence_orders', JSON.stringify(orders));
+        
+        // Also save as invoice to AllInvoices (for admin dashboard)
+        this.saveAsInvoice(order);
+    }
+    
+    saveAsInvoice(order) {
+        // Get current user
+        const currentUser = this.getCurrentUser();
+        
+        // Get user's TRN from their account, or generate one for guest
+        let userTRN;
+        if (currentUser && currentUser.trn) {
+            // Use existing TRN from user account
+            userTRN = currentUser.trn;
+        } else if (currentUser) {
+            // User exists but doesn't have TRN (old account), generate and save it
+            userTRN = this.generateUserTRN(currentUser.username);
+            this.updateUserTRN(currentUser.id, userTRN);
+        } else {
+            // Guest checkout - generate temporary TRN
+            userTRN = this.generateGuestTRN(order.shippingAddress.shippingEmail);
+        }
+        
+        // Create invoice object matching the format expected by admin dashboard
+        const invoice = {
+            trn: userTRN, // User's unique TRN (same for all their orders)
+            orderNumber: order.orderNumber, // Unique order number
+            userId: currentUser?.id || 'guest',
+            userName: currentUser ? `${currentUser.firstName} ${currentUser.lastName}` : 
+                     `${order.shippingAddress.shippingFirstName} ${order.shippingAddress.shippingLastName}`,
+            userEmail: currentUser?.email || order.shippingAddress.shippingEmail,
+            date: order.orderDate,
+            items: order.items.map(item => ({
+                name: item.name,
+                size: item.size,
+                quantity: item.quantity,
+                price: item.price
+            })),
+            subtotal: order.totals.subtotal,
+            tax: order.totals.tax,
+            shipping: order.totals.shipping,
+            total: order.totals.total,
+            status: 'Completed',
+            shippingAddress: order.shippingAddress,
+            billingAddress: order.billingAddress
+        };
+        
+        // Get existing invoices
+        const allInvoices = JSON.parse(localStorage.getItem('AllInvoices') || '[]');
+        
+        // Add new invoice
+        allInvoices.push(invoice);
+        
+        // Save back to localStorage
+        localStorage.setItem('AllInvoices', JSON.stringify(allInvoices));
+        
+        console.log('✅ Invoice saved to AllInvoices');
+        console.log('   User TRN:', userTRN);
+        console.log('   Order Number:', order.orderNumber);
+        
+        // Dispatch event for dashboard to listen
+        window.dispatchEvent(new CustomEvent('invoice:created', { detail: invoice }));
+    }
+    
+    generateUserTRN(username) {
+        // Generate a unique TRN based on username and timestamp
+        // Format: TRN-USERNAME-TIMESTAMP
+        const timestamp = Date.now();
+        const usernameHash = username.toUpperCase().substring(0, 4).padEnd(4, 'X');
+        return `TRN-${usernameHash}-${timestamp}`;
+    }
+    
+    generateGuestTRN(email) {
+        // Generate TRN for guest checkout
+        const timestamp = Date.now();
+        const emailHash = email.substring(0, 4).toUpperCase().padEnd(4, 'X');
+        return `TRN-GUEST-${emailHash}-${timestamp}`;
+    }
+    
+    updateUserTRN(userId, trn) {
+        // Update user's TRN in the users database
+        try {
+            const users = JSON.parse(localStorage.getItem('lunarEssence_users') || '[]');
+            const userIndex = users.findIndex(u => u.id === userId);
+            
+            if (userIndex !== -1) {
+                users[userIndex].trn = trn;
+                localStorage.setItem('lunarEssence_users', JSON.stringify(users));
+                
+                // Also update current user session
+                const currentUser = this.getCurrentUser();
+                if (currentUser && currentUser.id === userId) {
+                    currentUser.trn = trn;
+                    localStorage.setItem('lunarEssence_currentUser', JSON.stringify(currentUser));
+                }
+                
+                console.log('✅ User TRN updated:', trn);
+            }
+        } catch (error) {
+            console.error('Error updating user TRN:', error);
+        }
+    }
+    
+    getCurrentUser() {
+        try {
+            const user = localStorage.getItem('lunarEssence_currentUser');
+            return user ? JSON.parse(user) : null;
+        } catch (error) {
+            console.error('Error reading current user:', error);
+            return null;
+        }
     }
 
     showOrderConfirmation(order) {

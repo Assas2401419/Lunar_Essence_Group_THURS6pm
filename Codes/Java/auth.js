@@ -166,6 +166,8 @@ function processLogin(loginData, form) {
         lastName: user.lastName,
         email: user.email,
         username: user.username,
+        trn: user.trn || null, // Include user's TRN in session
+        isAdmin: user.isAdmin || false,
         loginTime: new Date().toISOString(),
         rememberMe: loginData.rememberMe
     };
@@ -175,7 +177,7 @@ function processLogin(loginData, form) {
     showSuccess(`Welcome back, ${user.firstName}!`);
     
     // Update navigation
-    updateNavigation(true, user.firstName);
+    updateNavigation(true, user.firstName, user.isAdmin);
     
     // Redirect after success
     setTimeout(() => {
@@ -196,6 +198,7 @@ function handleRegistration(e) {
         lastName: formData.get('lastName').trim(),
         email: formData.get('email').trim().toLowerCase(),
         dateOfBirth: formData.get('dateOfBirth'),
+        gender: formData.get('gender'),
         username: formData.get('username').trim().toLowerCase(),
         password: formData.get('password'),
         confirmPassword: formData.get('confirmPassword'),
@@ -237,6 +240,9 @@ function processRegistration(registrationData, form) {
         return;
     }
     
+    // Generate unique TRN for this user
+    const userTRN = generateUserTRN(registrationData.username);
+    
     // Create new user
     const newUser = {
         id: generateUserId(),
@@ -246,6 +252,8 @@ function processRegistration(registrationData, form) {
         username: registrationData.username,
         password: registrationData.password, // In real app, this would be hashed
         dateOfBirth: registrationData.dateOfBirth,
+        gender: registrationData.gender,
+        trn: userTRN, // User's unique Tax Registration Number
         registrationDate: new Date().toISOString(),
         addresses: []
     };
@@ -253,6 +261,18 @@ function processRegistration(registrationData, form) {
     // Add to users array
     users.push(newUser);
     localStorage.setItem('lunarEssence_users', JSON.stringify(users));
+    
+    // Dispatch event for dashboard to listen
+    window.dispatchEvent(new CustomEvent('user:registered', { 
+        detail: {
+            userId: newUser.id,
+            username: newUser.username,
+            email: newUser.email,
+            timestamp: newUser.registrationDate
+        }
+    }));
+    
+    console.log('✅ New user registered and event dispatched:', newUser.username);
     
     setFormLoading(form, false);
     showSuccess(`Account created successfully! Welcome to Lunar Essence, ${newUser.firstName}!`);
@@ -264,6 +284,8 @@ function processRegistration(registrationData, form) {
         lastName: newUser.lastName,
         email: newUser.email,
         username: newUser.username,
+        trn: newUser.trn, // Include user's TRN in session
+        isAdmin: newUser.isAdmin || false,
         loginTime: new Date().toISOString(),
         rememberMe: false
     };
@@ -271,7 +293,7 @@ function processRegistration(registrationData, form) {
     localStorage.setItem('lunarEssence_currentUser', JSON.stringify(sessionData));
     
     // Update navigation
-    updateNavigation(true, newUser.firstName);
+    updateNavigation(true, newUser.firstName, newUser.isAdmin);
     
     // Redirect after success
     setTimeout(() => {
@@ -561,6 +583,14 @@ function generateUserId() {
     return 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 }
 
+function generateUserTRN(username) {
+    // Generate a unique TRN based on username and timestamp
+    // Format: TRN-USERNAME-TIMESTAMP
+    const timestamp = Date.now();
+    const usernameHash = username.toUpperCase().substring(0, 4).padEnd(4, 'X');
+    return `TRN-${usernameHash}-${timestamp}`;
+}
+
 function checkExistingSession() {
     const currentUser = localStorage.getItem('lunarEssence_currentUser');
     
@@ -585,14 +615,14 @@ function checkExistingSession() {
         }
         
         // Update navigation to show logged in state
-        updateNavigation(true, userData.firstName);
+        updateNavigation(true, userData.firstName, userData.isAdmin);
         
         // Show welcome message
         showSuccess(`Welcome back, ${userData.firstName}!`);
     }
 }
 
-function updateNavigation(isLoggedIn, firstName = '') {
+function updateNavigation(isLoggedIn, firstName = '', isAdmin = false) {
     const authLink = document.getElementById('auth-link');
     
     if (authLink && isLoggedIn) {
@@ -602,6 +632,11 @@ function updateNavigation(isLoggedIn, firstName = '') {
             <span class="user-name">${firstName}</span>
         `;
         authLink.title = `Welcome, ${firstName}`;
+        
+        // Add Dashboard link if admin
+        if (isAdmin && typeof addDashboardLink === 'function') {
+            addDashboardLink();
+        }
     }
 }
 
@@ -612,6 +647,19 @@ function initializeDemoUsers() {
     if (existingUsers.length === 0) {
         const demoUsers = [
             {
+                id: 'admin_default',
+                firstName: 'Admin',
+                lastName: 'User',
+                email: 'admin@lunaressence.com',
+                username: 'admin',
+                password: 'Admin123',
+                dateOfBirth: '1990-01-01',
+                gender: 'Other',
+                isAdmin: true,
+                registrationDate: new Date().toISOString(),
+                addresses: []
+            },
+            {
                 id: 'demo_user_1',
                 firstName: 'Luna',
                 lastName: 'Starlight',
@@ -619,12 +667,39 @@ function initializeDemoUsers() {
                 username: 'lunastar',
                 password: 'Password123',
                 dateOfBirth: '1995-06-15',
+                gender: 'Female',
+                isAdmin: false,
                 registrationDate: new Date().toISOString(),
                 addresses: []
             }
         ];
         
         localStorage.setItem('lunarEssence_users', JSON.stringify(demoUsers));
+        console.log('✅ Default admin user created!');
+        console.log('Username: admin');
+        console.log('Password: Admin123');
+    } else {
+        // Check if admin exists, if not add it
+        const adminExists = existingUsers.some(u => u.username === 'admin');
+        if (!adminExists) {
+            existingUsers.push({
+                id: 'admin_default',
+                firstName: 'Admin',
+                lastName: 'User',
+                email: 'admin@lunaressence.com',
+                username: 'admin',
+                password: 'Admin123',
+                dateOfBirth: '1990-01-01',
+                gender: 'Other',
+                isAdmin: true,
+                registrationDate: new Date().toISOString(),
+                addresses: []
+            });
+            localStorage.setItem('lunarEssence_users', JSON.stringify(existingUsers));
+            console.log('✅ Default admin user added to existing users!');
+            console.log('Username: admin');
+            console.log('Password: Admin123');
+        }
     }
 }
 

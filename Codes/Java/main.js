@@ -7,6 +7,12 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeCartCount();
     initializeAuthState();
     initializeScrollEffects();
+    ensureAdminExists();
+    
+    // Initialize logout functionality if available
+    if (typeof initializeLogout === 'function') {
+        initializeLogout();
+    }
 });
 
 // Navigation Functionality
@@ -158,11 +164,56 @@ function initializeAuthState() {
                 logout();
             }
         });
+        
+        // Show Dashboard link if user is admin
+        if (currentUser.isAdmin) {
+            addDashboardLink();
+        }
     } else {
         if (authText) {
             authText.textContent = 'Account';
         }
         authLink.title = 'Sign in to your account';
+    }
+}
+
+// Add Dashboard link to navigation (admin only)
+function addDashboardLink() {
+    const navMenu = document.querySelector('.nav-menu');
+    if (!navMenu) return;
+    
+    // Check if dashboard link already exists
+    const existingDashboardLink = document.getElementById('admin-dashboard-link');
+    if (existingDashboardLink) return;
+    
+    // Create dashboard menu item
+    const dashboardItem = document.createElement('li');
+    dashboardItem.className = 'nav-item';
+    dashboardItem.id = 'admin-dashboard-link';
+    
+    // Check if current page is dashboard
+    const currentPage = window.location.pathname.split('/').pop();
+    const isActive = currentPage === 'dashboard.html' ? 'active' : '';
+    
+    dashboardItem.innerHTML = `
+        <a href="dashboard.html" class="nav-link ${isActive}">
+            <img src="../assets/SVG/graph.svg" alt="Dashboard" style="width: 18px; height: 18px; margin-right: 5px; vertical-align: middle;">
+            Dashboard
+        </a>
+    `;
+    
+    // Insert after Care Tips (last regular menu item)
+    navMenu.appendChild(dashboardItem);
+    
+    console.log('✅ Admin Dashboard link added to navigation');
+}
+
+// Remove Dashboard link from navigation (when logging out)
+function removeDashboardLink() {
+    const dashboardLink = document.getElementById('admin-dashboard-link');
+    if (dashboardLink) {
+        dashboardLink.remove();
+        console.log('✅ Admin Dashboard link removed from navigation');
     }
 }
 
@@ -177,11 +228,17 @@ function getCurrentUser() {
     }
 }
 
-// Logout functionality
+// Logout functionality (legacy - redirects to new logout system)
 function logout() {
-    if (confirm('Are you sure you want to sign out?')) {
-        localStorage.removeItem('lunarEssence_currentUser');
-        window.location.href = 'auth.html';
+    if (typeof performLogout === 'function') {
+        performLogout();
+    } else {
+        // Fallback if logout.js not loaded
+        if (confirm('Are you sure you want to sign out?')) {
+            localStorage.removeItem('lunarEssence_currentUser');
+            removeDashboardLink();
+            window.location.href = 'auth.html';
+        }
     }
 }
 
@@ -355,7 +412,9 @@ window.LunarEssence = {
     getCurrentUser,
     getCart,
     updateCartCount,
-    setPageLoading
+    setPageLoading,
+    addDashboardLink,
+    removeDashboardLink
 };
 //Shopping Cart Functions (Global)
 
@@ -489,8 +548,9 @@ function addDemoCartItems() {
 // Expose functions globally
 window.addToCart = addToCart;
 window.updateCartCount = updateCartCount;
-window.addDemoCartItems = addDemoCartItems;// Cl
-//ear cart function for testing
+window.addDemoCartItems = addDemoCartItems;
+
+// Clear cart function for testing
 function clearCart() {
     localStorage.removeItem('lunarEssence_cart');
     localStorage.removeItem('lunarEssence_appliedDiscount');
@@ -498,5 +558,44 @@ function clearCart() {
     console.log('Cart cleared for testing');
 }
 
-// Expose function globally
+// Ensure admin user exists
+function ensureAdminExists() {
+    try {
+        const users = localStorage.getItem('lunarEssence_users');
+        let usersList = users ? JSON.parse(users) : [];
+        
+        // Check if admin exists
+        const adminExists = usersList.some(u => u.username === 'admin' && u.isAdmin === true);
+        
+        if (!adminExists) {
+            // Create default admin
+            const defaultAdmin = {
+                id: 'admin_default',
+                firstName: 'Admin',
+                lastName: 'User',
+                email: 'admin@lunaressence.com',
+                username: 'admin',
+                password: 'Admin123',
+                dateOfBirth: '1990-01-01',
+                gender: 'Other',
+                isAdmin: true,
+                registrationDate: new Date().toISOString(),
+                addresses: []
+            };
+            
+            usersList.push(defaultAdmin);
+            localStorage.setItem('lunarEssence_users', JSON.stringify(usersList));
+            
+            console.log('✅ Default admin user created!');
+            console.log('📧 Username: admin');
+            console.log('🔑 Password: Admin123');
+            console.log('🔗 Dashboard: dashboard.html');
+        }
+    } catch (error) {
+        console.error('Error ensuring admin exists:', error);
+    }
+}
+
+// Expose functions globally
 window.clearCart = clearCart;
+window.ensureAdminExists = ensureAdminExists;
