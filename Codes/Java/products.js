@@ -1,7 +1,25 @@
+// ============================================================================
+// QUESTION 2: PRODUCT CATALOGUE
+// Group Member Assigned: Alex Crawford (2307247) Part 2
+//
+// This file implements:
+// a. Product List (Using Arrays & Objects):
+//    - Create an array of product objects in JavaScript
+//    - Each product has: name, price, description, image
+//    - Updated product list kept in localStorage as "All Products"
+//    - Display product list dynamically on the website
+//    - Each product has an "Add to Cart" button
+//
+// b. Add to Cart:
+//    - Shopping Cart (localStorage and Objects)
+//    - When user clicks "Add to Cart", add selected product to user's shopping cart
+//    - Shopping cart includes product details with taxes, discounts, subtotal, and total cost
+// ============================================================================
+
 // Lunar Essence - Products Page JavaScript
 // Product catalog functionality, filtering, and display
 
-// An object with a string of data, Sample product data (in a real app, this would come from a database/API)
+// Product data array - each product is an object with properties
 const productsData = [
     {
         id: 'new-moon-essence',

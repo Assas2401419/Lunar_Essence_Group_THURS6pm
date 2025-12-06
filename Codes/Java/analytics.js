@@ -1,9 +1,25 @@
+// ============================================================================
+// QUESTION 6: ADDITIONAL FUNCTIONALITY
+// Group Member Assigned: Assas Benjamin (2401419) Part 6
+//
+// This file implements:
+// a. ShowUserFrequency() - Show's user frequency based on Gender and Age Group:
+//    i. Show how many registered users fall under specific gender categories
+//       (e.g. Male, Female, Other)
+//    ii. Show how many registered users fall under different age groups
+//        (e.g. 18-25, 26-35, 36-50, 50+)
+//    iii. Display this data on a dashboard or a separate page
+//
+// b. ShowInvoices() - Displays all invoices and allows visitor to search for any
+//    of the invoices (using TRN) stored in AllInvoices from localStorage using
+//    console.log()
+//
+// c. GetUserInvoices() - Displays all the invoices for a user based on TRN stored
+//    in the localStorage key called, RegisterData
+// ============================================================================
+
 // Lunar Essence - Analytics & User Data Functions
 // User frequency analysis and invoice management
-
-// ==========================================
-// 6. Additional Functionality
-// ==========================================
 
 /**
  * ShowUserFrequency() - Show's user frequency based on Gender and Age Groups
