@@ -1,23 +1,26 @@
-
-🌙 **LUNAR ESSENCE Luxury Moon-Phase Candle Experience**
-
-*A Web Programming Project for CIT2011 — Designed with Elegance & Celestial Inspiration*
-
 <div align="center">
-  <img src="https://via.placeholder.com/900x260/0a0a0a/ffffff?text=LUNAR+ESSENCE+%E2%80%A2+HAND-POURED+LUXURY+CANDLES" width="90%">
-</div>
 
+  <h1>🌙 <strong>LUNAR ESSENCE Luxury Moon-Phase Candle Experience</strong></h1>
+
+  <p><em>A Web Programming Project for CIT2011</em><br>
+  <em>Designed with Elegance & Celestial Inspiration</em></p>
+
+  <img src="../assets/Logo 2.svg" alt="Lunar Essence Logo" class="logo-image">
+
+</div>
 
 
 # 🌑 **Overview**
 
-**Lunar Essence** is a handcrafted candle brand inspired by the mystique of lunar phases and Jamaican artistry.
-This website delivers a **refined shopping experience**, combining dark celestial visuals with clean layout, premium storytelling, and responsive design.
+**Lunar Essence** is a luxury candle brand born under the soft glow of the Caribbean moon. Inspired by the mystical beauty of Jamaica’s night skies, the brand was created from a desire to craft extraordinary sensory experiences that bring serenity, elegance, and celestial wonder into every home. The journey began during quiet moonlit nights across Jamaica, where each lunar phase seemed to whisper ancient secrets of peace, renewal, and intuition. This connection sparked a passion for the art of candle making, a craft that soon evolved into a mission to share the magic of hand-poured luxury with the world.  
+
 
 Created for:
 
 📘 **CIT2011 – Individual Assignment #2 and Group Assignment**
-🎓 **University of Technology, Jamaica**
+🎓 **University of Technology, Jamaica**  
+
+
 
 
 # 🌘 **How to Run the Project**
@@ -33,7 +36,7 @@ Created for:
 
 If deployed, use:
 
-👉 `https://<github-username>.github.io/<repository-name>/home.html`
+👉 `https://assas2401419.github.io/Lunar_Essence_Group_THURS6pm/Codes/home.html`
 
 > This lets the marker view the site online without installing anything.
 
@@ -43,8 +46,8 @@ If deployed, use:
 
 | Field        | Value      |
 | ------------ | ---------- |
-| **Username** | `testuser` |
-| **Password** | `123456`   |
+| **Username** |`222-333-444`|
+| **Password** | `Amyw1234` |
 
 These credentials allow quick access to any login-dependent features.
 
@@ -77,21 +80,8 @@ This project follows the IA rules and is built **without frontend frameworks** l
 * 🌙 **Moon-Phase Product Concept** — New Moon, Crescent, Half, Gibbous, Full Moon collections
 * 📱 **Responsive Design** — adapts across mobile, tablet, and desktop
 
+  
 
-🌌 **Screenshots**
-
-
- 🕯️ Hero Section
-
-<img src="https://via.placeholder.com/1000x420/0d0d0d/ffffff?text=Hero+Section+Preview" width="90%">
-
- 🌙 About Page
-
-<img src="https://via.placeholder.com/1000x420/1a1a1a/ffffff?text=About+Page+Preview" width="90%">
-
- ✨ Values & Craftsmanship
-
-<img src="https://via.placeholder.com/1000x420/131313/ffffff?text=Values+and+Craftsmanship" width="90%">
 
 
 
@@ -100,9 +90,21 @@ This project follows the IA rules and is built **without frontend frameworks** l
 | Name               | ID          | Email                                                                                 | Role                             |
 | ------------------ | ----------- | ------------------------------------------------------------------------------------- | -------------------------------- |
 | **Assas Benjamin** | **2401419** | **[assascbenjamin@utech.edu.jm](mailto:assascbenjamin@utech.edu.jm)**                 | Design & Layout, Content Writing |
-| **Alex Crawford**  | **2307247** | **[alexjcrawford@students.utech.edu.jm](mailto:alexjcrawford@students.utech.edu.jm)** |                                  |
-| **Sian Sudine**    | **2405547** | *N/A*                                                                                 |                                  |
-| **Shalani Lawson** | **2401118** | *N/A*                                                                                 |                                  |
+| **Alex Crawford**  | **2307247** | **[alexjcrawford@students.utech.edu.jm](mailto:alexjcrawford@students.utech.edu.jm)** | Design, Content Writing,  Testing  |
+| **Sian Sudine**    | **2405547** | **[shalaninlawson@students.utech.edu.jm](mailto:alexjcrawford@students.utech.edu.jm)**| Design & Layout, Content Writing 
+| **Shalani Lawson** | **2401118** | **[sianssudine@students.utech.edu.jm](mailto:alexjcrawford@students.utech.edu.jm)**   | Design & Layout, Content Writing |
+
+ 
+🌙 **Contacts**:  
+
+  shalaninlawson@students.utech.edu.jm  
+       
+  alexjcrawford@students.utech.edu.jm  
+       
+  sianssudine@students.utech.edu.jm  
+       
 
 
-🌙 **Contact**
+
+🕯️ **Main Contact**: assascbenjamin@utech.edu.jm
+             
