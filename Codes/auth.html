@@ -85,9 +85,10 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="login-username">Username or Email</label>
-                                <input type="text" id="login-username" name="username" required>
-                                <span class="error-message" id="login-username-error"></span>
+                                <label for="login-trn">TRN or Email</label>
+                                <input type="text" id="login-trn" name="trn" placeholder="000-000-000 or email@example.com" required>
+                                <span class="error-message" id="login-trn-error"></span>
+                                <small class="form-note">You can login with your TRN or email address</small>
                             </div>
 
                             <div class="form-group">
@@ -97,15 +98,14 @@
                             </div>
 
                             <div class="form-options">
-                                <label class="checkbox-label">
-                                    <input type="checkbox" id="remember-me">
-                                    <span class="checkmark"></span>
-                                    Remember me
-                                </label>
-                                <a href="#" class="forgot-password">Forgot password?</a>
+                                <div id="attempts-remaining" class="attempts-info"></div>
+                                <a href="#" class="forgot-password" id="reset-password-link">Reset Password</a>
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+                            <div class="form-buttons">
+                                <button type="submit" class="btn btn-primary btn-full">Login</button>
+                                <button type="button" class="btn btn-outline btn-full" id="cancel-login">Cancel</button>
+                            </div>
 
                             <div class="form-divider">
                                 <span>New to Lunar Essence?</span>
@@ -127,80 +127,66 @@
 
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label for="register-firstname">First Name</label>
+                                    <label for="register-firstname">First Name *</label>
                                     <input type="text" id="register-firstname" name="firstName" required>
                                     <span class="error-message" id="register-firstname-error"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label for="register-lastname">Last Name</label>
+                                    <label for="register-lastname">Last Name *</label>
                                     <input type="text" id="register-lastname" name="lastName" required>
                                     <span class="error-message" id="register-lastname-error"></span>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="register-email">Email Address</label>
-                                <input type="email" id="register-email" name="email" required>
-                                <span class="error-message" id="register-email-error"></span>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="register-dob">Date of Birth</label>
+                                <label for="register-dob">Date of Birth *</label>
                                 <input type="date" id="register-dob" name="dateOfBirth" required>
                                 <span class="error-message" id="register-dob-error"></span>
                                 <small class="form-note">You must be 18 or older to create an account</small>
                             </div>
 
                             <div class="form-group">
-                                <label for="register-gender">Gender</label>
+                                <label for="register-gender">Gender *</label>
                                 <select id="register-gender" name="gender" required>
                                     <option value="">Select Gender</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
                                     <option value="Other">Other</option>
+                                    <option value="Prefer not to say">Prefer not to say</option>
                                 </select>
                                 <span class="error-message" id="register-gender-error"></span>
                             </div>
 
                             <div class="form-group">
-                                <label for="register-username">Username</label>
-                                <input type="text" id="register-username" name="username" required>
-                                <span class="error-message" id="register-username-error"></span>
-                                <small class="form-note">Choose a unique username</small>
+                                <label for="register-phone">Phone Number *</label>
+                                <input type="tel" id="register-phone" name="phone" placeholder="876-123-4567" required>
+                                <span class="error-message" id="register-phone-error"></span>
                             </div>
 
                             <div class="form-group">
-                                <label for="register-password">Password</label>
+                                <label for="register-email">Email Address *</label>
+                                <input type="email" id="register-email" name="email" required>
+                                <span class="error-message" id="register-email-error"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="register-trn">TRN (Tax Registration Number) *</label>
+                                <input type="text" id="register-trn" name="trn" placeholder="000-000-000" required>
+                                <span class="error-message" id="register-trn-error"></span>
+                                <small class="form-note">Format: 000-000-000 (This will be your username)</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="register-password">Password *</label>
                                 <input type="password" id="register-password" name="password" required>
                                 <span class="error-message" id="register-password-error"></span>
-                                <small class="form-note">Minimum 8 characters, 1 uppercase, 1 number</small>
+                                <small class="form-note">Minimum 8 characters</small>
                             </div>
 
-                            <div class="form-group">
-                                <label for="register-confirm-password">Confirm Password</label>
-                                <input type="password" id="register-confirm-password" name="confirmPassword" required>
-                                <span class="error-message" id="register-confirm-password-error"></span>
+                            <div class="form-buttons">
+                                <button type="submit" class="btn btn-primary btn-full">Register</button>
+                                <button type="button" class="btn btn-outline btn-full" id="cancel-register">Cancel</button>
                             </div>
-
-                            <div class="form-group">
-                                <label class="checkbox-label">
-                                    <input type="checkbox" id="terms-conditions" required>
-                                    <span class="checkmark"></span>
-                                    I agree to the <a href="#" class="link">Terms & Conditions</a>
-                                </label>
-                                <span class="error-message" id="terms-conditions-error"></span>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="checkbox-label">
-                                    <input type="checkbox" id="privacy-policy" required>
-                                    <span class="checkmark"></span>
-                                    I accept the <a href="#" class="link">Privacy Policy</a>
-                                </label>
-                                <span class="error-message" id="privacy-policy-error"></span>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary btn-full">Create Account</button>
 
                             <div class="form-divider">
                                 <span>Already have an account?</span>
@@ -210,6 +196,56 @@
                                 Sign In
                             </button>
                         </form>
+                    </div>
+
+                    <!-- Reset Password Form -->
+                    <div class="auth-form-container hidden" id="reset-password-container">
+                        <form class="auth-form" id="reset-password-form">
+                            <div class="form-header">
+                                <h2>Reset Password</h2>
+                                <p>Enter your TRN to reset your password</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="reset-trn">TRN or Email</label>
+                                <input type="text" id="reset-trn" name="trn" placeholder="000-000-000 or email@example.com" required>
+                                <span class="error-message" id="reset-trn-error"></span>
+                                <small class="form-note">Enter your TRN or email address</small>
+                            </div>
+
+                            <div class="form-group hidden" id="new-password-group">
+                                <label for="reset-new-password">New Password</label>
+                                <input type="password" id="reset-new-password" name="newPassword" required>
+                                <span class="error-message" id="reset-new-password-error"></span>
+                                <small class="form-note">Minimum 8 characters</small>
+                            </div>
+
+                            <div class="form-group hidden" id="confirm-password-group">
+                                <label for="reset-confirm-password">Confirm New Password</label>
+                                <input type="password" id="reset-confirm-password" name="confirmPassword" required>
+                                <span class="error-message" id="reset-confirm-password-error"></span>
+                            </div>
+
+                            <div class="form-buttons">
+                                <button type="submit" class="btn btn-primary btn-full">Reset Password</button>
+                                <button type="button" class="btn btn-outline btn-full" id="cancel-reset">Back to Login</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Account Locked Page -->
+                    <div class="auth-form-container hidden" id="account-locked-container">
+                        <div class="auth-form">
+                            <div class="form-header">
+                                <h2>Account Locked</h2>
+                                <p>Too many failed login attempts</p>
+                            </div>
+                            <div class="locked-message">
+                                <p>Your account has been temporarily locked due to multiple failed login attempts.</p>
+                                <p>Please try again later or contact support for assistance.</p>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-full" id="back-to-login">Back to Login</button>
+                        </div>
                     </div>
                 </div>
 

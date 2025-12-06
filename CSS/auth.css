@@ -139,7 +139,9 @@
 .auth-form input[type="text"],
 .auth-form input[type="email"],
 .auth-form input[type="password"],
-.auth-form input[type="date"] {
+.auth-form input[type="date"],
+.auth-form input[type="tel"],
+.auth-form select {
     width: 100%;
     padding: var(--space-md);
     border: 2px solid var(--color-border);
@@ -462,4 +464,47 @@
     .benefit-card {
         padding: var(--space-lg);
     }
+}
+
+/* ============================================================================
+   FORM BUTTONS
+   ============================================================================ */
+.form-buttons {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.form-buttons .btn {
+    flex: 1;
+}
+
+/* ============================================================================
+   ATTEMPTS INFO
+   ============================================================================ */
+.attempts-info {
+    font-size: var(--font-sm);
+    color: #e74c3c;
+    font-weight: var(--font-semibold);
+}
+
+/* ============================================================================
+   LOCKED MESSAGE
+   ============================================================================ */
+.locked-message {
+    text-align: center;
+    padding: var(--space-xl);
+    background: rgba(231, 76, 60, 0.1);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-xl);
+}
+
+.locked-message p {
+    color: var(--color-text);
+    margin-bottom: var(--space-md);
+    line-height: 1.6;
+}
+
+.locked-message p:last-child {
+    margin-bottom: 0;
 }
