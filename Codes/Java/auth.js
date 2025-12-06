@@ -1,707 +1,661 @@
-// Lunar Essence - Authentication JavaScript
-// Login, registration, and user management functionality
+// ============================================================================
+// LUNAR ESSENCE - AUTHENTICATION SYSTEM
+// Handles user registration, login, and password reset with localStorage
+// Uses lunarEssence_users database for storing user information
+// ============================================================================
 
-// DOM Content Loaded Event
+// Database key for user storage
+const USER_DATABASE_KEY = 'lunarEssence_users';
+
+// Login attempts tracking
+let loginAttempts = 0;
+const MAX_LOGIN_ATTEMPTS = 3;
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
 document.addEventListener('DOMContentLoaded', function() {
-    initializeAuthPage();
+    initializeAuthSystem();
 });
 
-// Initialize authentication page
-function initializeAuthPage() {
-    initializeTabs();
-    initializeFormValidation();
-    initializeFormSubmission();
+function initializeAuthSystem() {
+    // Tab switching
+    setupTabSwitching();
+    
+    // Form submissions
+    setupRegistrationForm();
+    setupLoginForm();
+    setupResetPasswordForm();
+    
+    // Button handlers
+    setupButtonHandlers();
+    
+    // Check if user is already logged in
     checkExistingSession();
 }
 
-// Initialize tab switching
-function initializeTabs() {
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const switchToRegisterBtn = document.getElementById('switch-to-register');
-    const switchToLoginBtn = document.getElementById('switch-to-login');
+// ============================================================================
+// TAB SWITCHING
+// ============================================================================
+function setupTabSwitching() {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const switchToRegister = document.getElementById('switch-to-register');
+    const switchToLogin = document.getElementById('switch-to-login');
     
-    // Tab button clicks
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const targetTab = this.dataset.tab;
-            switchTab(targetTab);
+    tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tab = btn.dataset.tab;
+            switchTab(tab);
         });
     });
     
-    // Switch button clicks
-    if (switchToRegisterBtn) {
-        switchToRegisterBtn.addEventListener('click', () => switchTab('register'));
+    if (switchToRegister) {
+        switchToRegister.addEventListener('click', () => switchTab('register'));
     }
     
-    if (switchToLoginBtn) {
-        switchToLoginBtn.addEventListener('click', () => switchTab('login'));
+    if (switchToLogin) {
+        switchToLogin.addEventListener('click', () => switchTab('login'));
     }
 }
 
-// Switch between tabs
-function switchTab(tabName) {
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const formContainers = document.querySelectorAll('.auth-form-container');
-    
+function switchTab(tab) {
     // Update tab buttons
-    tabBtns.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.tab === tabName);
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tab);
     });
     
-    // Update form containers
-    formContainers.forEach(container => {
-        if (container.id === `${tabName}-form-container`) {
-            container.classList.remove('hidden');
-        } else {
-            container.classList.add('hidden');
-        }
-    });
+    // Hide all containers
+    document.getElementById('login-form-container').classList.add('hidden');
+    document.getElementById('register-form-container').classList.add('hidden');
+    document.getElementById('reset-password-container').classList.add('hidden');
+    document.getElementById('account-locked-container').classList.add('hidden');
     
-    // Clear any existing messages
-    clearMessages();
-}
-
-// Initialize form validation
-function initializeFormValidation() {
-    const inputs = document.querySelectorAll('.auth-form input');
-    
-    inputs.forEach(input => {
-        // Real-time validation on blur
-        input.addEventListener('blur', function() {
-            validateField(this);
-        });
-        
-        // Clear validation on focus
-        input.addEventListener('focus', function() {
-            clearFieldValidation(this);
-        });
-        
-        // Special handling for password confirmation
-        if (input.id === 'register-confirm-password') {
-            input.addEventListener('input', function() {
-                validatePasswordMatch();
-            });
-        }
-        
-        // Password strength indicator
-        if (input.id === 'register-password') {
-            input.addEventListener('input', function() {
-                validatePasswordStrength(this);
-            });
-        }
-    });
-}
-
-// Initialize form submission
-function initializeFormSubmission() {
-    const loginForm = document.getElementById('login-form');
-    const registerForm = document.getElementById('register-form');
-    
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
+    // Show selected container
+    if (tab === 'login') {
+        document.getElementById('login-form-container').classList.remove('hidden');
+    } else if (tab === 'register') {
+        document.getElementById('register-form-container').classList.remove('hidden');
     }
     
-    if (registerForm) {
-        registerForm.addEventListener('submit', handleRegistration);
-    }
+    // Clear all forms
+    clearAllForms();
 }
 
-// Handle login form submission
-function handleLogin(e) {
-    e.preventDefault();
+// ============================================================================
+// REGISTRATION FORM
+// ============================================================================
+function setupRegistrationForm() {
+    const form = document.getElementById('register-form');
     
-    const form = e.target;
-    const formData = new FormData(form);
+    if (!form) return;
     
-    const loginData = {
-        username: formData.get('username').trim(),
-        password: formData.get('password'),
-        rememberMe: document.getElementById('remember-me')?.checked || false
-    };
+    // Real-time validation
+    const trnInput = document.getElementById('register-trn');
+    const phoneInput = document.getElementById('register-phone');
+    const dobInput = document.getElementById('register-dob');
+    const passwordInput = document.getElementById('register-password');
     
-    // Validate login form
-    if (!validateLoginForm(loginData)) {
-        return;
+    if (trnInput) {
+        trnInput.addEventListener('input', formatTRN);
+        trnInput.addEventListener('blur', validateTRN);
     }
     
-    // Show loading state
-    setFormLoading(form, true);
+    if (phoneInput) {
+        phoneInput.addEventListener('input', formatPhone);
+    }
     
-    // Simulate API call delay
-    setTimeout(() => {
-        processLogin(loginData, form);
-    }, 1000);
+    if (dobInput) {
+        dobInput.addEventListener('blur', validateAge);
+    }
+    
+    if (passwordInput) {
+        passwordInput.addEventListener('blur', validatePassword);
+    }
+    
+    // Form submission
+    form.addEventListener('submit', handleRegistration);
 }
 
-// Process login
-function processLogin(loginData, form) {
-    const users = getStoredUsers();
+function formatTRN(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 9) value = value.slice(0, 9);
     
-    // Find user by username or email
-    const user = users.find(u => 
-        u.username.toLowerCase() === loginData.username.toLowerCase() ||
-        u.email.toLowerCase() === loginData.username.toLowerCase()
-    );
-    
-    if (!user) {
-        setFormLoading(form, false);
-        showError('User not found. Please check your username/email.');
-        return;
+    if (value.length > 6) {
+        value = value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6);
+    } else if (value.length > 3) {
+        value = value.slice(0, 3) + '-' + value.slice(3);
     }
     
-    // In a real app, you'd hash and compare passwords
-    if (user.password !== loginData.password) {
-        setFormLoading(form, false);
-        showError('Incorrect password. Please try again.');
-        return;
-    }
-    
-    // Successful login
-    setFormLoading(form, false);
-    
-    // Store current user session
-    const sessionData = {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        username: user.username,
-        trn: user.trn || null, // Include user's TRN in session
-        isAdmin: user.isAdmin || false,
-        loginTime: new Date().toISOString(),
-        rememberMe: loginData.rememberMe
-    };
-    
-    localStorage.setItem('lunarEssence_currentUser', JSON.stringify(sessionData));
-    
-    showSuccess(`Welcome back, ${user.firstName}!`);
-    
-    // Update navigation
-    updateNavigation(true, user.firstName, user.isAdmin);
-    
-    // Redirect after success
-    setTimeout(() => {
-        const returnUrl = new URLSearchParams(window.location.search).get('return') || 'home.html';
-        window.location.href = returnUrl;
-    }, 1500);
+    e.target.value = value;
 }
 
-// Handle registration form submission
+function formatPhone(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 10) value = value.slice(0, 10);
+    
+    if (value.length > 6) {
+        value = value.slice(0, 3) + '-' + value.slice(3, 6) + '-' + value.slice(6);
+    } else if (value.length > 3) {
+        value = value.slice(0, 3) + '-' + value.slice(3);
+    }
+    
+    e.target.value = value;
+}
+
+function validateTRN() {
+    const trnInput = document.getElementById('register-trn');
+    const errorSpan = document.getElementById('register-trn-error');
+    const trn = trnInput.value;
+    
+    // Check format
+    const trnPattern = /^\d{3}-\d{3}-\d{3}$/;
+    if (!trnPattern.test(trn)) {
+        showError(trnInput, errorSpan, 'TRN must be in format 000-000-000');
+        return false;
+    }
+    
+    // Check uniqueness
+    if (isTRNExists(trn)) {
+        showError(trnInput, errorSpan, 'This TRN is already registered');
+        return false;
+    }
+    
+    showSuccess(trnInput, errorSpan);
+    return true;
+}
+
+function validateAge() {
+    const dobInput = document.getElementById('register-dob');
+    const errorSpan = document.getElementById('register-dob-error');
+    const dob = new Date(dobInput.value);
+    const today = new Date();
+    
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+        age--;
+    }
+    
+    if (age < 18) {
+        showError(dobInput, errorSpan, 'You must be 18 years or older to register');
+        return false;
+    }
+    
+    showSuccess(dobInput, errorSpan);
+    return true;
+}
+
+function validatePassword() {
+    const passwordInput = document.getElementById('register-password');
+    const errorSpan = document.getElementById('register-password-error');
+    const password = passwordInput.value;
+    
+    if (password.length < 8) {
+        showError(passwordInput, errorSpan, 'Password must be at least 8 characters long');
+        return false;
+    }
+    
+    showSuccess(passwordInput, errorSpan);
+    return true;
+}
+
 function handleRegistration(e) {
     e.preventDefault();
     
-    const form = e.target;
-    const formData = new FormData(form);
-    
-    const registrationData = {
-        firstName: formData.get('firstName').trim(),
-        lastName: formData.get('lastName').trim(),
-        email: formData.get('email').trim().toLowerCase(),
-        dateOfBirth: formData.get('dateOfBirth'),
-        gender: formData.get('gender'),
-        username: formData.get('username').trim().toLowerCase(),
-        password: formData.get('password'),
-        confirmPassword: formData.get('confirmPassword'),
-        termsAccepted: document.getElementById('terms-conditions')?.checked || false,
-        privacyAccepted: document.getElementById('privacy-policy')?.checked || false
+    // Get form values
+    const formData = {
+        firstName: document.getElementById('register-firstname').value.trim(),
+        lastName: document.getElementById('register-lastname').value.trim(),
+        dateOfBirth: document.getElementById('register-dob').value,
+        gender: document.getElementById('register-gender').value,
+        phone: document.getElementById('register-phone').value,
+        email: document.getElementById('register-email').value.trim(),
+        trn: document.getElementById('register-trn').value,
+        password: document.getElementById('register-password').value,
+        dateOfRegistration: new Date().toISOString(),
+        cart: {},
+        invoices: []
     };
     
-    // Validate registration form
-    if (!validateRegistrationForm(registrationData)) {
+    // Validate all fields
+    if (!validateRegistrationForm(formData)) {
         return;
     }
     
-    // Show loading state
-    setFormLoading(form, true);
+    // Save to localStorage
+    saveRegistrationData(formData);
     
-    // Simulate API call delay
+    // Show success message
+    showGlobalMessage('success', 'Registration successful! Please login with your TRN.');
+    
+    // Switch to login tab after 2 seconds
     setTimeout(() => {
-        processRegistration(registrationData, form);
-    }, 1500);
-}
-
-// Process registration
-function processRegistration(registrationData, form) {
-    const users = getStoredUsers();
-    
-    // Check if username already exists
-    if (users.some(u => u.username === registrationData.username)) {
-        setFormLoading(form, false);
-        showError('Username already exists. Please choose a different one.');
-        document.getElementById('register-username').focus();
-        return;
-    }
-    
-    // Check if email already exists
-    if (users.some(u => u.email === registrationData.email)) {
-        setFormLoading(form, false);
-        showError('Email already registered. Please use a different email or sign in.');
-        document.getElementById('register-email').focus();
-        return;
-    }
-    
-    // Generate unique TRN for this user
-    const userTRN = generateUserTRN(registrationData.username);
-    
-    // Create new user
-    const newUser = {
-        id: generateUserId(),
-        firstName: registrationData.firstName,
-        lastName: registrationData.lastName,
-        email: registrationData.email,
-        username: registrationData.username,
-        password: registrationData.password, // In real app, this would be hashed
-        dateOfBirth: registrationData.dateOfBirth,
-        gender: registrationData.gender,
-        trn: userTRN, // User's unique Tax Registration Number
-        registrationDate: new Date().toISOString(),
-        addresses: []
-    };
-    
-    // Add to users array
-    users.push(newUser);
-    localStorage.setItem('lunarEssence_users', JSON.stringify(users));
-    
-    // Dispatch event for dashboard to listen
-    window.dispatchEvent(new CustomEvent('user:registered', { 
-        detail: {
-            userId: newUser.id,
-            username: newUser.username,
-            email: newUser.email,
-            timestamp: newUser.registrationDate
-        }
-    }));
-    
-    console.log('✅ New user registered and event dispatched:', newUser.username);
-    
-    setFormLoading(form, false);
-    showSuccess(`Account created successfully! Welcome to Lunar Essence, ${newUser.firstName}!`);
-    
-    // Auto-login the new user
-    const sessionData = {
-        id: newUser.id,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
-        email: newUser.email,
-        username: newUser.username,
-        trn: newUser.trn, // Include user's TRN in session
-        isAdmin: newUser.isAdmin || false,
-        loginTime: new Date().toISOString(),
-        rememberMe: false
-    };
-    
-    localStorage.setItem('lunarEssence_currentUser', JSON.stringify(sessionData));
-    
-    // Update navigation
-    updateNavigation(true, newUser.firstName, newUser.isAdmin);
-    
-    // Redirect after success
-    setTimeout(() => {
-        window.location.href = 'home.html';
+        switchTab('login');
+        document.getElementById('login-trn').value = formData.trn;
     }, 2000);
-}
-
-// Validation Functions
-function validateLoginForm(data) {
-    let isValid = true;
-    
-    // Username/Email validation
-    if (!data.username) {
-        showFieldError('login-username', 'Username or email is required');
-        isValid = false;
-    } else {
-        clearFieldError('login-username');
-    }
-    
-    // Password validation
-    if (!data.password) {
-        showFieldError('login-password', 'Password is required');
-        isValid = false;
-    } else {
-        clearFieldError('login-password');
-    }
-    
-    return isValid;
 }
 
 function validateRegistrationForm(data) {
     let isValid = true;
     
-    // First name validation
-    if (!data.firstName || data.firstName.length < 2) {
-        showFieldError('register-firstname', 'First name must be at least 2 characters');
+    // Validate first name
+    if (!data.firstName) {
+        showError(
+            document.getElementById('register-firstname'),
+            document.getElementById('register-firstname-error'),
+            'First name is required'
+        );
         isValid = false;
-    } else {
-        clearFieldError('register-firstname');
     }
     
-    // Last name validation
-    if (!data.lastName || data.lastName.length < 2) {
-        showFieldError('register-lastname', 'Last name must be at least 2 characters');
+    // Validate last name
+    if (!data.lastName) {
+        showError(
+            document.getElementById('register-lastname'),
+            document.getElementById('register-lastname-error'),
+            'Last name is required'
+        );
         isValid = false;
-    } else {
-        clearFieldError('register-lastname');
     }
     
-    // Email validation
+    // Validate date of birth
+    if (!validateAge()) {
+        isValid = false;
+    }
+    
+    // Validate gender
+    if (!data.gender) {
+        showError(
+            document.getElementById('register-gender'),
+            document.getElementById('register-gender-error'),
+            'Please select a gender'
+        );
+        isValid = false;
+    }
+    
+    // Validate phone
+    if (!data.phone) {
+        showError(
+            document.getElementById('register-phone'),
+            document.getElementById('register-phone-error'),
+            'Phone number is required'
+        );
+        isValid = false;
+    }
+    
+    // Validate email
     if (!data.email || !isValidEmail(data.email)) {
-        showFieldError('register-email', 'Please enter a valid email address');
+        showError(
+            document.getElementById('register-email'),
+            document.getElementById('register-email-error'),
+            'Please enter a valid email address'
+        );
         isValid = false;
-    } else {
-        clearFieldError('register-email');
     }
     
-    // Date of birth validation (must be 18+)
-    if (!data.dateOfBirth || !isValidAge(data.dateOfBirth)) {
-        showFieldError('register-dob', 'You must be 18 or older to create an account');
+    // Validate TRN
+    if (!validateTRN()) {
         isValid = false;
-    } else {
-        clearFieldError('register-dob');
     }
     
-    // Username validation
-    if (!data.username || data.username.length < 3) {
-        showFieldError('register-username', 'Username must be at least 3 characters');
+    // Validate password
+    if (!validatePassword()) {
         isValid = false;
-    } else if (!/^[a-zA-Z0-9_]+$/.test(data.username)) {
-        showFieldError('register-username', 'Username can only contain letters, numbers, and underscores');
-        isValid = false;
-    } else {
-        clearFieldError('register-username');
-    }
-    
-    // Password validation
-    if (!isValidPassword(data.password)) {
-        showFieldError('register-password', 'Password must be at least 8 characters with 1 uppercase and 1 number');
-        isValid = false;
-    } else {
-        clearFieldError('register-password');
-    }
-    
-    // Password confirmation
-    if (data.password !== data.confirmPassword) {
-        showFieldError('register-confirm-password', 'Passwords do not match');
-        isValid = false;
-    } else {
-        clearFieldError('register-confirm-password');
-    }
-    
-    // Terms and conditions
-    if (!data.termsAccepted) {
-        showFieldError('terms-conditions', 'You must accept the Terms & Conditions');
-        isValid = false;
-    } else {
-        clearFieldError('terms-conditions');
-    }
-    
-    // Privacy policy
-    if (!data.privacyAccepted) {
-        showFieldError('privacy-policy', 'You must accept the Privacy Policy');
-        isValid = false;
-    } else {
-        clearFieldError('privacy-policy');
     }
     
     return isValid;
 }
 
-// Field validation functions
-function validateField(input) {
-    const value = input.value.trim();
-    const fieldName = input.name;
+function saveRegistrationData(userData) {
+    // Get existing data from Lunar Essence database
+    let users = JSON.parse(localStorage.getItem(USER_DATABASE_KEY) || '[]');
     
-    switch (fieldName) {
-        case 'email':
-            if (value && !isValidEmail(value)) {
-                showFieldError(input.id, 'Please enter a valid email address');
-                return false;
-            }
-            break;
-        case 'username':
-            if (value && value.length < 3) {
-                showFieldError(input.id, 'Username must be at least 3 characters');
-                return false;
-            }
-            break;
-        case 'password':
-            if (input.id === 'register-password' && value && !isValidPassword(value)) {
-                showFieldError(input.id, 'Password must be at least 8 characters with 1 uppercase and 1 number');
-                return false;
-            }
-            break;
-    }
+    // Add new user
+    users.push(userData);
     
-    clearFieldError(input.id);
-    return true;
+    // Save back to localStorage
+    localStorage.setItem(USER_DATABASE_KEY, JSON.stringify(users));
 }
 
-function validatePasswordMatch() {
-    const password = document.getElementById('register-password')?.value;
-    const confirmPassword = document.getElementById('register-confirm-password')?.value;
+function isTRNExists(trn) {
+    const users = JSON.parse(localStorage.getItem(USER_DATABASE_KEY) || '[]');
+    return users.some(user => user.trn === trn);
+}
+
+// ============================================================================
+// LOGIN FORM
+// ============================================================================
+function setupLoginForm() {
+    const form = document.getElementById('login-form');
     
-    if (confirmPassword && password !== confirmPassword) {
-        showFieldError('register-confirm-password', 'Passwords do not match');
-        return false;
+    if (!form) return;
+    
+    // Smart input formatting - only format if it looks like a TRN
+    const loginTrnInput = document.getElementById('login-trn');
+    if (loginTrnInput) {
+        loginTrnInput.addEventListener('input', smartFormatLoginInput);
+    }
+    
+    form.addEventListener('submit', handleLogin);
+    
+    // Update attempts display
+    updateAttemptsDisplay();
+}
+
+function smartFormatLoginInput(e) {
+    const value = e.target.value;
+    
+    // If it contains @ symbol, it's likely an email - don't format
+    if (value.includes('@')) {
+        return;
+    }
+    
+    // If it's all digits or has dashes, format as TRN
+    if (/^[\d-]*$/.test(value)) {
+        formatTRN(e);
+    }
+}
+
+function handleLogin(e) {
+    e.preventDefault();
+    
+    const identifier = document.getElementById('login-trn').value.trim();
+    const password = document.getElementById('login-password').value;
+    
+    // Clear previous errors
+    document.getElementById('login-trn-error').textContent = '';
+    document.getElementById('login-password-error').textContent = '';
+    
+    // Validate credentials (accepts TRN or email)
+    const user = validateLogin(identifier, password);
+    
+    if (user) {
+        // Successful login
+        loginAttempts = 0;
+        
+        // Save session using Lunar Essence keys
+        localStorage.setItem('lunarEssence_currentUser', JSON.stringify(user));
+        localStorage.setItem('isLoggedIn', 'true');
+        
+        // Show success message
+        showGlobalMessage('success', 'Login successful! Redirecting...');
+        
+        // Redirect to products page
+        setTimeout(() => {
+            window.location.href = 'products.html';
+        }, 1500);
     } else {
-        clearFieldError('register-confirm-password');
-        return true;
+        // Failed login
+        loginAttempts++;
+        updateAttemptsDisplay();
+        
+        if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+            // Show account locked page
+            showAccountLocked();
+        } else {
+            const remainingAttempts = MAX_LOGIN_ATTEMPTS - loginAttempts;
+            showError(
+                document.getElementById('login-password'),
+                document.getElementById('login-password-error'),
+                `Invalid credentials. ${remainingAttempts} attempt(s) remaining.`
+            );
+        }
     }
 }
 
-function validatePasswordStrength(input) {
-    const password = input.value;
-    const isStrong = isValidPassword(password);
+function validateLogin(identifier, password) {
+    const users = JSON.parse(localStorage.getItem(USER_DATABASE_KEY) || '[]');
     
-    if (password.length > 0 && !isStrong) {
+    // Check if identifier is TRN or email
+    return users.find(user => {
+        const matchesTRN = user.trn === identifier;
+        const matchesEmail = user.email.toLowerCase() === identifier.toLowerCase();
+        const matchesPassword = user.password === password;
+        
+        return (matchesTRN || matchesEmail) && matchesPassword;
+    });
+}
+
+function updateAttemptsDisplay() {
+    const attemptsDiv = document.getElementById('attempts-remaining');
+    if (loginAttempts > 0) {
+        const remaining = MAX_LOGIN_ATTEMPTS - loginAttempts;
+        attemptsDiv.textContent = `${remaining} attempt(s) remaining`;
+    } else {
+        attemptsDiv.textContent = '';
+    }
+}
+
+function showAccountLocked() {
+    document.getElementById('login-form-container').classList.add('hidden');
+    document.getElementById('account-locked-container').classList.remove('hidden');
+}
+
+// ============================================================================
+// RESET PASSWORD FORM
+// ============================================================================
+function setupResetPasswordForm() {
+    const form = document.getElementById('reset-password-form');
+    const resetLink = document.getElementById('reset-password-link');
+    
+    if (!form || !resetLink) return;
+    
+    resetLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showResetPasswordForm();
+    });
+    
+    form.addEventListener('submit', handleResetPassword);
+}
+
+function showResetPasswordForm() {
+    document.getElementById('login-form-container').classList.add('hidden');
+    document.getElementById('reset-password-container').classList.remove('hidden');
+    
+    // Hide password fields initially
+    document.getElementById('new-password-group').classList.add('hidden');
+    document.getElementById('confirm-password-group').classList.add('hidden');
+    
+    // Add smart formatting to reset form
+    const resetTrnInput = document.getElementById('reset-trn');
+    if (resetTrnInput) {
+        resetTrnInput.addEventListener('input', smartFormatLoginInput);
+    }
+}
+
+function handleResetPassword(e) {
+    e.preventDefault();
+    
+    const identifier = document.getElementById('reset-trn').value.trim();
+    const newPassword = document.getElementById('reset-new-password').value;
+    const confirmPassword = document.getElementById('reset-confirm-password').value;
+    
+    const newPasswordGroup = document.getElementById('new-password-group');
+    const confirmPasswordGroup = document.getElementById('confirm-password-group');
+    
+    // First step: verify TRN or Email
+    if (newPasswordGroup.classList.contains('hidden')) {
+        const users = JSON.parse(localStorage.getItem(USER_DATABASE_KEY) || '[]');
+        const userExists = users.some(user => 
+            user.trn === identifier || user.email.toLowerCase() === identifier.toLowerCase()
+        );
+        
+        if (userExists) {
+            // Show password fields
+            newPasswordGroup.classList.remove('hidden');
+            confirmPasswordGroup.classList.remove('hidden');
+            document.getElementById('reset-trn-error').textContent = '';
+        } else {
+            showError(
+                document.getElementById('reset-trn'),
+                document.getElementById('reset-trn-error'),
+                'Account not found'
+            );
+        }
+        return;
+    }
+    
+    // Second step: update password
+    if (newPassword.length < 8) {
+        showError(
+            document.getElementById('reset-new-password'),
+            document.getElementById('reset-new-password-error'),
+            'Password must be at least 8 characters long'
+        );
+        return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+        showError(
+            document.getElementById('reset-confirm-password'),
+            document.getElementById('reset-confirm-password-error'),
+            'Passwords do not match'
+        );
+        return;
+    }
+    
+    // Update password in Lunar Essence database
+    let users = JSON.parse(localStorage.getItem(USER_DATABASE_KEY) || '[]');
+    const userIndex = users.findIndex(user => 
+        user.trn === identifier || user.email.toLowerCase() === identifier.toLowerCase()
+    );
+    
+    if (userIndex !== -1) {
+        users[userIndex].password = newPassword;
+        localStorage.setItem(USER_DATABASE_KEY, JSON.stringify(users));
+        
+        const userTRN = users[userIndex].trn;
+        
+        showGlobalMessage('success', 'Password reset successful! Please login with your new password.');
+        
+        setTimeout(() => {
+            switchTab('login');
+            document.getElementById('login-trn').value = userTRN;
+        }, 2000);
+    }
+}
+
+// ============================================================================
+// BUTTON HANDLERS
+// ============================================================================
+function setupButtonHandlers() {
+    // Cancel buttons
+    const cancelLogin = document.getElementById('cancel-login');
+    const cancelRegister = document.getElementById('cancel-register');
+    const cancelReset = document.getElementById('cancel-reset');
+    const backToLogin = document.getElementById('back-to-login');
+    
+    if (cancelLogin) {
+        cancelLogin.addEventListener('click', () => {
+            document.getElementById('login-form').reset();
+            clearFormErrors('login-form');
+        });
+    }
+    
+    if (cancelRegister) {
+        cancelRegister.addEventListener('click', () => {
+            document.getElementById('register-form').reset();
+            clearFormErrors('register-form');
+        });
+    }
+    
+    if (cancelReset) {
+        cancelReset.addEventListener('click', () => {
+            switchTab('login');
+        });
+    }
+    
+    if (backToLogin) {
+        backToLogin.addEventListener('click', () => {
+            loginAttempts = 0;
+            updateAttemptsDisplay();
+            switchTab('login');
+        });
+    }
+}
+
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
+function showError(input, errorSpan, message) {
+    if (input) {
         input.classList.add('error');
         input.classList.remove('success');
-    } else if (isStrong) {
-        input.classList.add('success');
+    }
+    if (errorSpan) {
+        errorSpan.textContent = message;
+    }
+}
+
+function showSuccess(input, errorSpan) {
+    if (input) {
         input.classList.remove('error');
-    } else {
+        input.classList.add('success');
+    }
+    if (errorSpan) {
+        errorSpan.textContent = '';
+    }
+}
+
+function showGlobalMessage(type, message) {
+    const successMsg = document.getElementById('success-message');
+    const errorMsg = document.getElementById('error-message');
+    
+    if (type === 'success' && successMsg) {
+        successMsg.querySelector('.message-text').textContent = message;
+        successMsg.classList.remove('hidden');
+        errorMsg.classList.add('hidden');
+        
+        setTimeout(() => {
+            successMsg.classList.add('hidden');
+        }, 5000);
+    } else if (type === 'error' && errorMsg) {
+        errorMsg.querySelector('.message-text').textContent = message;
+        errorMsg.classList.remove('hidden');
+        successMsg.classList.add('hidden');
+        
+        setTimeout(() => {
+            errorMsg.classList.add('hidden');
+        }, 5000);
+    }
+}
+
+function clearFormErrors(formId) {
+    const form = document.getElementById(formId);
+    if (!form) return;
+    
+    form.querySelectorAll('.error-message').forEach(span => {
+        span.textContent = '';
+    });
+    
+    form.querySelectorAll('input').forEach(input => {
         input.classList.remove('error', 'success');
-    }
+    });
 }
 
-// Utility validation functions
+function clearAllForms() {
+    const forms = ['login-form', 'register-form', 'reset-password-form'];
+    forms.forEach(formId => {
+        const form = document.getElementById(formId);
+        if (form) {
+            form.reset();
+            clearFormErrors(formId);
+        }
+    });
+}
+
 function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
-
-function isValidPassword(password) {
-    // At least 8 characters, 1 uppercase, 1 number
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-    return passwordRegex.test(password);
-}
-
-function isValidAge(dateOfBirth) {
-    const today = new Date();
-    const birthDate = new Date(dateOfBirth);
-    const age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-        return age - 1 >= 18;
-    }
-    
-    return age >= 18;
-}
-
-// UI Helper Functions
-function showFieldError(fieldId, message) {
-    const field = document.getElementById(fieldId);
-    const errorElement = document.getElementById(`${fieldId}-error`);
-    
-    if (field) {
-        field.classList.add('error');
-        field.classList.remove('success');
-    }
-    
-    if (errorElement) {
-        errorElement.textContent = message;
-    }
-}
-
-function clearFieldError(fieldId) {
-    const field = document.getElementById(fieldId);
-    const errorElement = document.getElementById(`${fieldId}-error`);
-    
-    if (field) {
-        field.classList.remove('error');
-    }
-    
-    if (errorElement) {
-        errorElement.textContent = '';
-    }
-}
-
-function clearFieldValidation(input) {
-    input.classList.remove('error', 'success');
-    const errorElement = document.getElementById(`${input.id}-error`);
-    if (errorElement) {
-        errorElement.textContent = '';
-    }
-}
-
-function showSuccess(message) {
-    const successElement = document.getElementById('success-message');
-    const errorElement = document.getElementById('error-message');
-    
-    if (errorElement) {
-        errorElement.classList.add('hidden');
-    }
-    
-    if (successElement) {
-        successElement.querySelector('.message-text').textContent = message;
-        successElement.classList.remove('hidden');
-    }
-}
-
-function showError(message) {
-    const successElement = document.getElementById('success-message');
-    const errorElement = document.getElementById('error-message');
-    
-    if (successElement) {
-        successElement.classList.add('hidden');
-    }
-    
-    if (errorElement) {
-        errorElement.querySelector('.message-text').textContent = message;
-        errorElement.classList.remove('hidden');
-    }
-}
-
-function clearMessages() {
-    const successElement = document.getElementById('success-message');
-    const errorElement = document.getElementById('error-message');
-    
-    if (successElement) {
-        successElement.classList.add('hidden');
-    }
-    
-    if (errorElement) {
-        errorElement.classList.add('hidden');
-    }
-}
-
-function setFormLoading(form, isLoading) {
-    if (isLoading) {
-        form.classList.add('loading');
-    } else {
-        form.classList.remove('loading');
-    }
-}
-
-// User Management Functions
-function getStoredUsers() {
-    const users = localStorage.getItem('lunarEssence_users');
-    return users ? JSON.parse(users) : [];
-}
-
-function generateUserId() {
-    return 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-}
-
-function generateUserTRN(username) {
-    // Generate a unique TRN based on username and timestamp
-    // Format: TRN-USERNAME-TIMESTAMP
-    const timestamp = Date.now();
-    const usernameHash = username.toUpperCase().substring(0, 4).padEnd(4, 'X');
-    return `TRN-${usernameHash}-${timestamp}`;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
 }
 
 function checkExistingSession() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
     const currentUser = localStorage.getItem('lunarEssence_currentUser');
     
-    if (currentUser) {
-        const userData = JSON.parse(currentUser);
-        
-        // Check if session is still valid (optional: implement session timeout)
-        const loginTime = new Date(userData.loginTime);
-        const now = new Date();
-        const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
-        
-        // If remember me is false and more than 24 hours, clear session
-        if (!userData.rememberMe && hoursSinceLogin > 24) {
-            localStorage.removeItem('lunarEssence_currentUser');
-            return;
-        }
-        
-        // If more than 30 days, clear session regardless
-        if (hoursSinceLogin > (30 * 24)) {
-            localStorage.removeItem('lunarEssence_currentUser');
-            return;
-        }
-        
-        // Update navigation to show logged in state
-        updateNavigation(true, userData.firstName, userData.isAdmin);
-        
-        // Show welcome message
-        showSuccess(`Welcome back, ${userData.firstName}!`);
+    if (isLoggedIn === 'true' && currentUser) {
+        // User is already logged in, could redirect or show message
+        console.log('User already logged in:', JSON.parse(currentUser));
     }
 }
-
-function updateNavigation(isLoggedIn, firstName = '', isAdmin = false) {
-    const authLink = document.getElementById('auth-link');
-    
-    if (authLink && isLoggedIn) {
-        // Update auth link to show user name or account
-        authLink.innerHTML = `
-            <img src="../assets/register.svg" alt="Account" class="nav-icon-img">
-            <span class="user-name">${firstName}</span>
-        `;
-        authLink.title = `Welcome, ${firstName}`;
-        
-        // Add Dashboard link if admin
-        if (isAdmin && typeof addDashboardLink === 'function') {
-            addDashboardLink();
-        }
-    }
-}
-
-// Initialize demo users for testing (remove in production)
-function initializeDemoUsers() {
-    const existingUsers = getStoredUsers();
-    
-    if (existingUsers.length === 0) {
-        const demoUsers = [
-            {
-                id: 'admin_default',
-                firstName: 'Admin',
-                lastName: 'User',
-                email: 'admin@lunaressence.com',
-                username: 'admin',
-                password: 'Admin123',
-                dateOfBirth: '1990-01-01',
-                gender: 'Other',
-                isAdmin: true,
-                registrationDate: new Date().toISOString(),
-                addresses: []
-            },
-            {
-                id: 'demo_user_1',
-                firstName: 'Luna',
-                lastName: 'Starlight',
-                email: 'luna@example.com',
-                username: 'lunastar',
-                password: 'Password123',
-                dateOfBirth: '1995-06-15',
-                gender: 'Female',
-                isAdmin: false,
-                registrationDate: new Date().toISOString(),
-                addresses: []
-            }
-        ];
-        
-        localStorage.setItem('lunarEssence_users', JSON.stringify(demoUsers));
-        console.log('✅ Default admin user created!');
-        console.log('Username: admin');
-        console.log('Password: Admin123');
-    } else {
-        // Check if admin exists, if not add it
-        const adminExists = existingUsers.some(u => u.username === 'admin');
-        if (!adminExists) {
-            existingUsers.push({
-                id: 'admin_default',
-                firstName: 'Admin',
-                lastName: 'User',
-                email: 'admin@lunaressence.com',
-                username: 'admin',
-                password: 'Admin123',
-                dateOfBirth: '1990-01-01',
-                gender: 'Other',
-                isAdmin: true,
-                registrationDate: new Date().toISOString(),
-                addresses: []
-            });
-            localStorage.setItem('lunarEssence_users', JSON.stringify(existingUsers));
-            console.log('✅ Default admin user added to existing users!');
-            console.log('Username: admin');
-            console.log('Password: Admin123');
-        }
-    }
-}
-
-// Initialize demo users on page load (for testing purposes)
-initializeDemoUsers();
