@@ -1,8 +1,34 @@
 // ============================================================================
+// QUESTION 1: USER AUTHENTICATION (LocalStorage)
+// Group Member Assigned: Sian Sudine (2405547) Part 1
+// 
+// This file implements:
+// a. Registration Page:
+//    - Create registration form with fields: first name, last name, DOB, gender,
+//      phone number, email, TRN (tax registration number), and password
+//    - Validate form: all fields required (HTML + JavaScript validation)
+//    - Password must be at least 8 characters long
+//    - User must be 18+ years old (calculate age using JavaScript)
+//    - TRN must be unique, format 000-000-000, used as username for login
+//    - Store registration data as JavaScript object with: firstName, lastName,
+//      dateOfBirth, gender, phone, email, TRN, password, dateOfRegistration,
+//      cart{}, invoices[]
+//    - Append each registration to localStorage key "lunarEssence_users" (array of objects)
+//    - Buttons: Register (saves data), Cancel (clears form)
+//
+// b. Login Page:
+//    - Create login form where user enters TRN or Email and password
+//    - Validate login by checking against lunarEssence_users in localStorage
+//    - Allow 3 attempts to enter correct credentials
+//    - If successful → redirect to Product Catalog (products.html)
+//    - If all attempts fail → redirect to Account Locked page
+//    - Buttons: Login (validates), Cancel (clears form)
+//    - Reset Password link (allows password change by searching TRN/Email)
+// ============================================================================
+
 // LUNAR ESSENCE - AUTHENTICATION SYSTEM
 // Handles user registration, login, and password reset with localStorage
 // Uses lunarEssence_users database for storing user information
-// ============================================================================
 
 // Database key for user storage
 const USER_DATABASE_KEY = 'lunarEssence_users';

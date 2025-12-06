@@ -1,3 +1,37 @@
+// ============================================================================
+// QUESTION 4: CHECKOUT PAGE
+// Group Member Assigned: Shalani Lawson (2401118) Part 4
+//
+// This file implements:
+// a. Show summary of shopping cart with total cost
+// b. Allow user to enter shipping details (name, address, amount being paid)
+// c. When user confirms checkout, generate an invoice
+//
+// Include:
+// d. Confirm button (confirms the checkout)
+// e. Cancel button (go back to the cart)
+// ============================================================================
+
+// ============================================================================
+// QUESTION 5: INVOICE GENERATION
+// Group Member Assigned: Shalani Lawson (2401118) Part 5
+//
+// This file implements:
+// a. After checkout, generate invoice with following details:
+//    - Name of company
+//    - Date of invoice
+//    - Shipping information (from checkout)
+//    - Invoice number (unique)
+//    - TRN
+//    - Purchased items (name, quantity, price, discount)
+//    - Taxes
+//    - Subtotal
+//    - Total cost
+// b. Append invoice to user's array of invoices (array of objects)
+//    Also store invoice to localStorage with key "AllInvoices" (array of objects)
+// c. Optionally, display message indicating invoice has been "sent" to user's email
+// ============================================================================
+
 // Checkout System JavaScript
 // Lunar Essence E-Commerce - Checkout Functionality
 

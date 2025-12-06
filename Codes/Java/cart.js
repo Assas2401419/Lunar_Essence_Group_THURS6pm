@@ -1,3 +1,19 @@
+// ============================================================================
+// QUESTION 3: CART PAGE
+// Group Member Assigned: Alex Crawford (2307247) Part 3
+//
+// This file implements:
+// a. Create shopping cart page that lists items in cart:
+//    - Display: name, price, quantity, sub-total, discount, tax, and total
+// b. Allow users to remove items from cart and update quantities
+// c. Calculate and display total price of items in cart
+// 
+// Include:
+// d. Clear All button (remove all items from shopping cart)
+// e. Check Out button (redirects to Checkout Page)
+// f. Close button (close the shopping cart view)
+// ============================================================================
+
 // Lunar Essence - Shopping Cart JavaScript
 // Complete cart management functionality
 
