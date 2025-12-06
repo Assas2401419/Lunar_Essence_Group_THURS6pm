@@ -28,16 +28,20 @@ class CheckoutController {
     loadCartData() {
         // Load cart data from localStorage
         const cart = localStorage.getItem('lunarEssence_cart');
+
         this.cartData = cart ? JSON.parse(cart) : [];
-        
+
         // If cart is empty, redirect to products page
         if (this.cartData.length === 0) {
+	    
+
             window.location.href = 'products.html';
             return;
         }
     }
 
-    setupEventListeners() {
+    setupEventListeners() 
+    {
         // Navigation buttons
         const backBtn = document.getElementById('back-btn');
         const continueBtn = document.getElementById('continue-btn');
@@ -81,6 +85,21 @@ class CheckoutController {
 
         // Form validation on input
         this.setupFormValidation();
+	
+	const modal = document.getElementById('order-confirmation-modal');
+	if(modal)
+	{
+		modal.addEventListener('click', (e) =>
+		{
+			if(e.target === modal)
+			{
+				modal.classList.add('hidden');
+				modal.classList.remove('show');
+			}
+		});
+	}
+	
+	
     }
 
     setupFormValidation() {
@@ -335,6 +354,7 @@ class CheckoutController {
 
     populateReviewItems() {
         const reviewItems = document.getElementById('review-items');
+
         if (!reviewItems) return;
 
         let itemsHtml = '';
@@ -348,6 +368,7 @@ class CheckoutController {
         });
         
         reviewItems.innerHTML = itemsHtml;
+
     }
 
     populateReviewAddresses() {
@@ -421,6 +442,15 @@ class CheckoutController {
         };
     }
 
+	updateCartCount() 
+	{
+    		const cartCount = document.getElementById('cart-count');
+    		if (cartCount) 
+		{
+        		cartCount.textContent = '0';
+    		}
+	}
+
     displaySummaryItems() {
         const summaryItems = document.getElementById('summary-items');
         if (!summaryItems) return;
@@ -442,6 +472,7 @@ class CheckoutController {
         });
         
         summaryItems.innerHTML = itemsHtml;
+
     }
 
     displaySummaryTotals() {
@@ -463,6 +494,7 @@ class CheckoutController {
     }
 
     processOrder() {
+
         if (!this.validateCurrentStep()) {
             return;
         }
@@ -478,8 +510,11 @@ class CheckoutController {
         
         // Clear cart
         localStorage.removeItem('lunarEssence_cart');
+	
+	this.updateCartCount();
+
         
-        // Show confirmation
+        // Show confirmation and auto-downloaded receipt
         this.showOrderConfirmation(order);
     }
 
@@ -517,9 +552,233 @@ class CheckoutController {
         orders.push(order);
         localStorage.setItem('lunarEssence_orders', JSON.stringify(orders));
     }
+	downloadReceipt(order, format = 'json') 
+	{
+    		try 
+		{
+        		const receipt = {
+            			receipt: {
+                			orderDetails: {
+                    				orderNumber: order.orderNumber,
+                    				orderDate: new Date(order.orderDate).toLocaleString('en-JM'),
+                    				status: order.status,
+                    				orderType: "Lunar Essence Online Purchase",
+                    				website: "https://lunareessence.com"
+                			},
+                			customer: {
+                    				name: `${order.shippingAddress.shippingFirstName} ${order.shippingAddress.shippingLastName}`,
+                    				email: order.shippingAddress.shippingEmail,
+                    				phone: order.shippingAddress.shippingPhone,
+                    				shippingAddress: {
+                        				street: order.shippingAddress.shippingAddress,
+                        				city: order.shippingAddress.shippingCity,
+                        				parish: order.shippingAddress.shippingParish,
+                        				postalCode: order.shippingAddress.shippingPostal,
+                        				country: order.shippingAddress.shippingCountry
+                    				}
+                			},
+                			items: order.items.map(item => ({
+                    				name: item.name,
+                    				size: item.size || "Standard",
+                    				scent: item.scent || "Lunar Blend",
+                    				quantity: item.quantity,
+                    				unitPrice: item.price,
+                    				total: (item.quantity * item.price).toFixed(2)
+                			})),
+                			pricing: {
+                    				subtotal: order.totals.subtotal.toFixed(2),
+                    				tax: order.totals.tax.toFixed(2),
+                    				shipping: order.totals.shipping.toFixed(2),
+                    				total: order.totals.total.toFixed(2),
+                    				
+                			},
+                			specialInstructions: {
+                    				giftMessage: order.giftMessage || "None provided",
+                    				deliveryInstructions: order.deliveryInstructions || "Standard delivery"
+                			},
+                			payment: {
+                    				method: order.paymentMethod,
+                    				processedAt: new Date().toISOString(),
+                    				paymentStatus: "Completed (Demo Mode)",
+                    				note: "This is a demonstration transaction. No actual payment was processed."
+                			},
+                			merchant: {
+                    				name: "Lunar Essence",
+                    				tagline: "Hand-poured luxury candles inspired by lunar phases",
+                    				location: "Crafted in Jamaica 🇯🇲",
+                    				contact: "assascbenjamin@utech.edu.jm",
+                    				website: "https://lunareessence.com",
+                    				businessId: "LE-2025-2401419"
+                			},
+                			disclaimer: "Thank you for choosing Lunar Essence. This receipt is for your records. All transactions in this demo are simulated for educational purposes."
+            			}
+        		};
+
+        		// Handle billing address separately
+        		if (this.checkoutData.billing && this.checkoutData.billing.billingAddress) {
+            			receipt.receipt.customer.billingAddress = {
+                			street: this.checkoutData.billing.billingAddress,
+                			city: this.checkoutData.billing.billingCity,
+                			parish: this.checkoutData.billing.billingParish,
+                			postalCode: this.checkoutData.billing.billingPostal,
+                			country: this.checkoutData.billing.billingCountry
+            			};
+        		} else {
+            			receipt.receipt.customer.billingAddress = "Same as shipping address";
+        		}
+
+        if (format === 'json') {
+            // JSON format
+            const jsonString = JSON.stringify(receipt, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `LunarEssence_Receipt_${order.orderNumber}.json`;
+            document.body.appendChild(a);
+            a.click();
+
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+            
+            return true;
+        } else if (format === 'txt') {
+            const textContent = this.generateTextReceipt(receipt);
+            const blob = new Blob([textContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `LunarEssence_Receipt_${order.orderNumber}.txt`;
+            document.body.appendChild(a);
+            a.click();
+
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+
+            return true;
+        }
+        return false;
+    } catch (error) {
+        console.error('Error generating receipt:', error);
+        this.showReceiptStatus('error', 'Failed to generate receipt. Please try again.');
+        return false;
+    }
+}
+	catch (error)
+	{
+		console.error('Error generating receipt: ', error);
+		this.showReceiptStatus('error', 'Failed to generate receipt. Please try again. ');
+		return false;
+	}
+	
+	generateTextReceipt(receiptData)
+	{
+		const r = receiptData.receipt;
+    
+    		let text = `
+		========================================
+        	LUNAR ESSENCE RECEIPT
+		========================================
+		Order Number: ${r.orderDetails.orderNumber}
+		Order Date: ${r.orderDetails.orderDate}
+		Status: ${r.orderDetails.status.toUpperCase()}
+		========================================
+
+		CUSTOMER INFORMATION
+		-------------------
+		Name: ${r.customer.name}
+		Email: ${r.customer.email}
+		Phone: ${r.customer.phone}
+		
+		Shipping Address:
+		${r.customer.shippingAddress.street}
+		${r.customer.shippingAddress.city}, ${r.customer.shippingAddress.parish}
+		${r.customer.shippingAddress.postalCode}, 						${r.customer.shippingAddress.country}
+
+		Billing Address:
+		${typeof r.customer.billingAddress === 'string' 
+    		? r.customer.billingAddress 
+    		: `${r.customer.billingAddress.street}\n${r.customer.billingAddress.city}, 		${r.customer.billingAddress.parish}\n							${r.customer.billingAddress.postalCode}, 						${r.customer.billingAddress.country}`}
+
+		========================================
+		
+		ORDER ITEMS
+		-----------
+		${r.items.map(item => `${item.quantity}x ${item.name} (${item.size})
+  		@ $${item.unitPrice} each = $${item.total}`).join('\n')}
+
+		========================================
+
+		ORDER SUMMARY
+		-------------
+		Subtotal: $${r.pricing.subtotal}
+		Tax (16% GCT): $${r.pricing.tax}
+		Shipping: $${r.pricing.shipping}
+		Total: $${r.pricing.total}
+
+		========================================
+
+		SPECIAL INSTRUCTIONS
+		-------------------
+		Gift Message: ${r.specialInstructions.giftMessage}
+		Delivery: ${r.specialInstructions.deliveryInstructions}
+
+		========================================
+
+		PAYMENT INFORMATION
+		------------------
+		Method: ${r.payment.method}
+		Status: ${r.payment.paymentStatus}
+		Processed: ${new Date(r.payment.processedAt).toLocaleString()}
+
+		========================================
+
+		MERCHANT INFORMATION
+		-------------------
+		${r.merchant.name}
+		${r.merchant.tagline}
+		${r.merchant.location}
+		Contact: ${r.merchant.contact}
+		Website: ${r.merchant.website}
+
+		========================================
+
+		${r.disclaimer}
+
+		========================================
+		Thank you for your purchase!
+		Visit us again at ${r.merchant.website}
+		========================================
+   		`;
+		return text;
+
+	}
+	showReceiptStatus(type, message) 
+	{
+    		const statusElement = document.getElementById('receipt-download-status');
+    		if (statusElement) 
+		{
+        		statusElement.textContent = message;
+        		statusElement.className = 'receipt-status';
+        		statusElement.classList.add(type);
+        		statusElement.classList.remove('hidden');
+        
+        		// Hide after 5 seconds
+        		setTimeout(() => {
+            		statusElement.classList.add('hidden');
+        		}, 5000);
+    		}
+	}
+
 
     showOrderConfirmation(order) {
-        const modal = document.getElementById('order-confirmation-modal');
+        
+	const modal = document.getElementById('order-confirmation-modal');
+	
         const orderNumberElement = document.getElementById('confirmation-order-number');
         const emailElement = document.getElementById('confirmation-email');
         const summaryElement = document.getElementById('confirmation-summary');
@@ -531,25 +790,77 @@ class CheckoutController {
         if (emailElement) {
             emailElement.textContent = order.shippingAddress.shippingEmail;
         }
-
-        if (summaryElement) {
+	//Added addition receipt details
+        if (summaryElement) 
+	{
             summaryElement.innerHTML = `
                 <h4>Order Summary</h4>
                 <p><strong>Items:</strong> ${order.items.length}</p>
                 <p><strong>Total:</strong> $${order.totals.total.toFixed(2)}</p>
+		<p><strong>Shipping:</strong> $${order.totals.shipping.toFixed(2)}</p>
+            	<p><strong>Tax (16%):</strong> $${order.totals.tax.toFixed(2)}</p>
+            	<p><strong>Total:</strong> $${order.totals.total.toFixed(2)}</p>
                 <p><strong>Estimated Delivery:</strong> 5-7 business days</p>
             `;
         }
+	
+	const jsonButton = document.getElementById('download-receipt-json');
+	
+	if(jsonButton)
+	{
+		jsonButton.onclick = () =>
+		{
+			const success = this.downloadReceipt(order, 'json');
+			if(success)
+			{
+				this.showReceiptStatus('success', 'Receipt downloaded Successfully!');
+			}
+		};
+	}
+	
+	
+        if (modal) 
+	{
+            	modal.classList.remove('hidden');
+            	modal.classList.add('show');
+		
+		setTimeout(() => 
+		{
+			const success = this.downloadReceipt(order, 'json');
+			if(success)
+			{
+				const autoMsg = document.createElement('div');
+                		autoMsg.className = 'receipt-auto-message';
+                		autoMsg.innerHTML = `
+                    		<strong> Receipt Automatically Downloaded</strong>
+                    		<small>File: LunarEssence_Receipt_${order.orderNumber}.json</small>
+                		`;
+				const receiptSection = modal.querySelector('.receipt-download-section');
+				
+				if(receiptSection)
+				{
+					receiptSection.appendChild(autoMsg);
+                    
+                    			// Fade out after 8 seconds
+                    			setTimeout(() =>
+					{
+						autoMsg.style.opacity ='0';
+						setTimeout(() => autoMsg.remove(), 500);
+					
+					}, 8000);	
+			
+				}
+			}
 
-        if (modal) {
-            modal.classList.remove('hidden');
-            modal.classList.add('show');
+		}, 2000);
         }
     }
+	
 }
 
 // Initialize checkout when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => 
+{
     // Only initialize on checkout page
     if (document.querySelector('.checkout-section')) {
         new CheckoutController();
